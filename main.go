@@ -2,13 +2,34 @@ package main
 
 import (
 	"fmt"
-	"github.com/codeexplorations/data-lake/models/proto"
 	"os"
+	"strings"
+
+	"github.com/codeexplorations/data-lake/config"
+	"github.com/codeexplorations/data-lake/models/proto"
 )
 
 // main function that processes a local file
 func main() {
-	ProcessFile("sample.txt")
+	conf := config.GetConfig()
+
+	ProcessFolder(conf.DataFolder)
+}
+
+// ProcessFile processes the file
+func ProcessFolder(folder string) {
+	entries, err := os.ReadDir(folder)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			ProcessFolder(folder + "/" + entry.Name())
+		} else {
+			ProcessFile(folder + "/" + entry.Name())
+		}
+	}
 }
 
 // ProcessFile processes the file
@@ -21,18 +42,14 @@ func ProcessFile(fileName string) {
 
 	fileSize := len(data)
 
-	pwd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	l := fmt.Sprintf("file://%s", pwd+"/"+fileName)
+	pathSplit := strings.Split(fileName, "/")
 
 	object := proto.Object{
-		FileName:     fileName,
-		FileLocation: l,
+		FileName:     pathSplit[len(pathSplit)-1],
+		FileLocation: fileName,
 		ContentType:  "text/plain",
 		ContentSize:  int64(fileSize),
 	}
 
-	fmt.Printf("Object: %+v\n", object)
+	fmt.Printf("Object: %+v\n", &object)
 }
