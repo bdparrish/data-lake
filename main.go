@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/codeexplorations/data-lake/models"
 	"os"
 )
 
@@ -20,5 +21,18 @@ func ProcessFile(s string) {
 
 	fileSize := len(data)
 
-	fmt.Printf("File size: %d\n", fileSize)
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	l := fmt.Sprintf("file://%s", pwd+"/"+s)
+
+	object := models.Object{
+		Filename:     s,
+		FileLocation: l,
+		ContentType:  "text/plain",
+		ContentSize:  fileSize,
+	}
+
+	fmt.Printf("Object: %+v\n", object)
 }
