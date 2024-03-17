@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/codeexplorations/data-lake/models"
+	"github.com/codeexplorations/data-lake/models/proto"
 	"os"
 )
 
@@ -12,9 +12,9 @@ func main() {
 }
 
 // ProcessFile processes the file
-func ProcessFile(s string) {
+func ProcessFile(fileName string) {
 	// read the file
-	data, err := os.ReadFile(s)
+	data, err := os.ReadFile(fileName)
 	if err != nil {
 		panic(err)
 	}
@@ -25,13 +25,13 @@ func ProcessFile(s string) {
 	if err != nil {
 		panic(err)
 	}
-	l := fmt.Sprintf("file://%s", pwd+"/"+s)
+	l := fmt.Sprintf("file://%s", pwd+"/"+fileName)
 
-	object := models.Object{
-		Filename:     s,
+	object := proto.Object{
+		FileName:     fileName,
 		FileLocation: l,
 		ContentType:  "text/plain",
-		ContentSize:  fileSize,
+		ContentSize:  int64(fileSize),
 	}
 
 	fmt.Printf("Object: %+v\n", object)
