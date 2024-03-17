@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./proto";
+
+message Object {
+  string fileName = 1;
+  string fileLocation = 2;
+  string contentType = 3;
+  int64 contentSize = 4; // int32 4,294,967,295 or int64 9,223,372,036,854,775,807
+}
