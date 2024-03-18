@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/codeexplorations/data-lake/config"
 	models_v1 "github.com/codeexplorations/data-lake/models/v1"
 )
@@ -48,7 +49,18 @@ func ProcessFile(fileName string) {
 		FileName:     pathSplit[len(pathSplit)-1],
 		FileLocation: fileName,
 		ContentType:  "text/plain",
-		ContentSize:  int64(fileSize),
+		ContentSize:  int32(fileSize),
+	}
+
+	validator, err := protovalidate.New()
+	if err != nil {
+		panic(fmt.Sprintf("failed to initialize proto validator: %v", err))
+	}
+
+	if err := validator.Validate(&object); err != nil {
+		panic(fmt.Sprintf("failed to validate object: %v", err))
+	} else {
+		fmt.Println("object is valid")
 	}
 
 	fmt.Printf("Object: %+v\n", &object)

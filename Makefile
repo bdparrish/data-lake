@@ -4,7 +4,7 @@ NC:=\033[0m
 
 proto: ## Build protobuf models
 	@echo "$(YT)Building protobuf ...$(NC)"
-	protoc --go_out=./ ./models/v1/schema.proto
+	buf generate
 
 run: proto ## Run main
 	@echo "$(YT)Running main.go ...$(NC)"
