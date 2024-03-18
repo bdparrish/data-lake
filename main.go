@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/codeexplorations/data-lake/config"
-	"github.com/codeexplorations/data-lake/models/proto"
+	models_v1 "github.com/codeexplorations/data-lake/models/v1"
 )
 
 // main function that processes a local file
