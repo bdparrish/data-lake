@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/codeexplorations/data-lake/models/proto"
 	"os"
+
+	models_v1 "github.com/codeexplorations/data-lake/models/v1"
 )
 
 // main function that processes a local file
@@ -27,7 +28,7 @@ func ProcessFile(fileName string) {
 	}
 	l := fmt.Sprintf("file://%s", pwd+"/"+fileName)
 
-	object := proto.Object{
+	object := models_v1.Object{
 		FileName:     fileName,
 		FileLocation: l,
 		ContentType:  "text/plain",
