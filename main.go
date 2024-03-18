@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/codeexplorations/data-lake/config"
-	"github.com/codeexplorations/data-lake/models/proto"
+	models_v1 "github.com/codeexplorations/data-lake/models/v1"
 )
 
 // main function that processes a local file
@@ -44,7 +44,7 @@ func ProcessFile(fileName string) {
 
 	pathSplit := strings.Split(fileName, "/")
 
-	object := proto.Object{
+	object := models_v1.Object{
 		FileName:     pathSplit[len(pathSplit)-1],
 		FileLocation: fileName,
 		ContentType:  "text/plain",
