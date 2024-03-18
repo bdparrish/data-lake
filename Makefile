@@ -8,4 +8,4 @@ proto: ## Build protobuf models
 
 run: proto ## Run main
 	@echo "$(YT)Running main.go ...$(NC)"
-	go run main.go
+	CONFIG_FILE=./.env go run main.go

@@ -44,7 +44,7 @@ func ProcessFile(fileName string) {
 
 	pathSplit := strings.Split(fileName, "/")
 
-	object := proto.Object{
+	object := models_v1.Object{
 		FileName:     pathSplit[len(pathSplit)-1],
 		FileLocation: fileName,
 		ContentType:  "text/plain",
