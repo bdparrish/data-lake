@@ -35,5 +35,5 @@ func ProcessFile(fileName string) {
 		ContentSize:  int64(fileSize),
 	}
 
-	fmt.Printf("Object: %+v\n", object)
+	fmt.Printf("Object: %+v\n", &object)
 }
