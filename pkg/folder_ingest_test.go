@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"os"
@@ -15,12 +15,12 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 	}{
 		{
 			name:     "directory",
-			folder:   "/test",
+			folder:   "/../test",
 			location: "/files/test.txt",
 		},
 		{
 			name:     "file",
-			folder:   "/test/files",
+			folder:   "/../test/files",
 			location: "/test.txt",
 		},
 	}
@@ -44,7 +44,7 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 func TestFolderIngest_ProcessFile_Success(t *testing.T) {
 	pwd, _ := os.Getwd()
 
-	fileName := pwd + "/test/files/test.txt"
+	fileName := pwd + "/../test/files/test.txt"
 
 	processedObject, err := ProcessFile(fileName)
 
