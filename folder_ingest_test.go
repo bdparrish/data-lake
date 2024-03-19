@@ -7,34 +7,38 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFolderIngest_ProcessFolder_SuccessNoDepth(t *testing.T) {
-	pwd, _ := os.Getwd()
+func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
+	tests := []struct {
+		name     string
+		folder   string
+		location string
+	}{
+		{
+			name:     "directory",
+			folder:   "/test",
+			location: "/files/test.txt",
+		},
+		{
+			name:     "file",
+			folder:   "/test/files",
+			location: "/test.txt",
+		},
+	}
 
-	folder := pwd + "/test/files"
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			pwd, _ := os.Getwd()
 
-	processedObjects, err := ProcessFolder(folder)
+			processedObjects, err := ProcessFolder(pwd + tc.folder)
 
-	assert.Nil(t, err)
-	assert.Len(t, processedObjects, 1)
-	assert.Equal(t, "test.txt", processedObjects[0].FileName)
-	assert.Equal(t, folder+"/test.txt", processedObjects[0].FileLocation)
-	assert.Equal(t, "text/plain", processedObjects[0].ContentType)
-	assert.Equal(t, int32(15), processedObjects[0].ContentSize)
-}
-
-func TestFolderIngest_ProcessFolder_SuccessWithDepth(t *testing.T) {
-	pwd, _ := os.Getwd()
-
-	folder := pwd + "/test"
-
-	processedObjects, err := ProcessFolder(folder)
-
-	assert.Nil(t, err)
-	assert.Len(t, processedObjects, 1)
-	assert.Equal(t, "test.txt", processedObjects[0].FileName)
-	assert.Equal(t, folder+"/files/test.txt", processedObjects[0].FileLocation)
-	assert.Equal(t, "text/plain", processedObjects[0].ContentType)
-	assert.Equal(t, int32(15), processedObjects[0].ContentSize)
+			assert.Nil(t, err)
+			assert.Len(t, processedObjects, 1)
+			assert.Equal(t, "test.txt", processedObjects[0].FileName)
+			assert.Equal(t, pwd+tc.folder+tc.location, processedObjects[0].FileLocation)
+			assert.Equal(t, "text/plain", processedObjects[0].ContentType)
+			assert.Equal(t, int32(15), processedObjects[0].ContentSize)
+		})
+	}
 }
 
 func TestFolderIngest_ProcessFile_Success(t *testing.T) {
