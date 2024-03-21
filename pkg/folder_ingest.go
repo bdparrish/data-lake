@@ -49,23 +49,29 @@ func ProcessFile(fileName string) (*models_v1.Object, error) {
 
 	pathSplit := strings.Split(fileName, "/")
 
-	object := models_v1.Object{
+	object := &models_v1.Object{
 		FileName:     pathSplit[len(pathSplit)-1],
 		FileLocation: fileName,
 		ContentType:  "text/plain",
 		ContentSize:  int32(fileSize),
 	}
 
+	validate(object)
+
+	return object, nil
+}
+
+func validate(object *models_v1.Object) (bool, error) {
 	validator, err := protovalidate.New()
 	if err != nil {
-		return nil, fmt.Errorf("failed to initialize proto validator: %v", err)
+		return false, fmt.Errorf("failed to initialize proto validator: %v", err)
 	}
 
-	if err := validator.Validate(&object); err != nil {
-		return nil, fmt.Errorf("failed to validate object: %v", err)
+	if err := validator.Validate(object); err != nil {
+		return false, fmt.Errorf("failed to validate object: %v", err)
 	} else {
 		fmt.Println("object is valid")
 	}
 
-	return &object, nil
+	return true, nil
 }
