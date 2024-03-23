@@ -56,6 +56,33 @@ func TestFolderIngest_ProcessFile_Success(t *testing.T) {
 	assert.Equal(t, int32(15), processedObject.ContentSize)
 }
 
+func TestFolderIngest_ProcessFolder_Failure(t *testing.T) {
+	processor := &LocalIngestProcessorImpl{}
+
+	pwd, _ := os.Getwd()
+
+	folder := pwd + "/../../test/files/missing"
+
+	processedObject, err := processor.ProcessFolder(folder)
+
+	assert.Error(t, err)
+	assert.Equal(t, "open /Users/benjaminparrish/Development/Personal/data-lake/pkg/ingest/../../test/files/missing: no such file or directory", err.Error())
+	assert.Nil(t, processedObject)
+}
+
+func TestFolderIngest_ProcessFile_Failure(t *testing.T) {
+	processor := &LocalIngestProcessorImpl{}
+
+	pwd, _ := os.Getwd()
+
+	fileName := pwd + "/../../test/files/ingest/missing.txt"
+
+	processedObject, err := processor.ProcessFile(fileName)
+
+	assert.Error(t, err)
+	assert.Nil(t, processedObject)
+}
+
 func TestFolderIngest_ProcessFile_validate(t *testing.T) {
 	object := &modelsv1.Object{
 		FileName:     "test.txt",
