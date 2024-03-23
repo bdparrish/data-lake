@@ -6,10 +6,14 @@ proto: ## Build protobuf models
 	@echo "$(YT)Building protobuf ...$(NC)"
 	buf generate
 
+mocks: ## Generate mocks
+	@echo "$(YT)Generating mocks ...$(NC)"
+	mockery --all --keeptree --output ./test/mocks/ --outpkg mocks
+
 run: proto ## Run main
 	@echo "$(YT)Running main.go ...$(NC)"
 	CONFIG_FILE=./.env go run main.go
 
-test: proto ## Run tests
+test: proto mocks ## Run tests
 	@echo "$(YT)Running tests ...$(NC)"
 	go test -v -cover ./...

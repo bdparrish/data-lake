@@ -1,4 +1,4 @@
-package pkg
+package ingest
 
 import (
 	"os"
@@ -16,21 +16,23 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 	}{
 		{
 			name:     "directory",
-			folder:   "/../test",
-			location: "/files/test.txt",
+			folder:   "/../../test/files",
+			location: "/ingest/test.txt",
 		},
 		{
 			name:     "file",
-			folder:   "/../test/files",
+			folder:   "/../../test/files/ingest",
 			location: "/test.txt",
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
+			processor := &LocalIngestProcessorImpl{}
+
 			pwd, _ := os.Getwd()
 
-			processedObjects, err := ProcessFolder(pwd + tc.folder)
+			processedObjects, err := processor.ProcessFolder(pwd + tc.folder)
 
 			assert.Nil(t, err)
 			assert.Len(t, processedObjects, 1)
@@ -43,11 +45,13 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 }
 
 func TestFolderIngest_ProcessFile_Success(t *testing.T) {
+	processor := &LocalIngestProcessorImpl{}
+
 	pwd, _ := os.Getwd()
 
-	fileName := pwd + "/../test/files/test.txt"
+	fileName := pwd + "/../../test/files/ingest/test.txt"
 
-	processedObject, err := ProcessFile(fileName)
+	processedObject, err := processor.ProcessFile(fileName)
 
 	assert.Nil(t, err)
 	assert.Equal(t, "test.txt", processedObject.FileName)
