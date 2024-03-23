@@ -32,4 +32,5 @@ func TestConfig_LoadingDefaultValues(t *testing.T) {
 	}
 
 	assert.Equal(t, "/tmp/data-lake", config.DataFolder)
+	assert.Equal(t, "local", config.IngestProcessorType)
 }

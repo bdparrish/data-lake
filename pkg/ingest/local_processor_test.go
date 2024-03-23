@@ -61,23 +61,27 @@ func TestFolderIngest_ProcessFile_Success(t *testing.T) {
 }
 
 func TestFolderIngest_ProcessFolder_Failure(t *testing.T) {
+	processor := &LocalIngestProcessorImpl{}
+
 	pwd, _ := os.Getwd()
 
 	folder := pwd + "/../../test/files/missing"
 
-	processedObject, err := ProcessFolder(folder)
+	processedObject, err := processor.ProcessFolder(folder)
 
 	assert.Error(t, err)
-	assert.Equal(t, "open /Users/benjaminparrish/Development/Personal/data-lake/pkg/../../test/files/missing: no such file or directory", err.Error())
+	assert.Equal(t, "open /Users/benjaminparrish/Development/Personal/data-lake/pkg/ingest/../../test/files/missing: no such file or directory", err.Error())
 	assert.Nil(t, processedObject)
 }
 
 func TestFolderIngest_ProcessFile_Failure(t *testing.T) {
+	processor := &LocalIngestProcessorImpl{}
+
 	pwd, _ := os.Getwd()
 
-	fileName := pwd + "/../../test/files/missing.txt"
+	fileName := pwd + "/../../test/files/ingest/missing.txt"
 
-	processedObject, err := ProcessFile(fileName)
+	processedObject, err := processor.ProcessFile(fileName)
 
 	assert.Error(t, err)
 	assert.Nil(t, processedObject)
