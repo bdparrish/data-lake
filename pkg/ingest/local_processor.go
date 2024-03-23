@@ -1,4 +1,4 @@
-package pkg
+package ingest
 
 import (
 	"fmt"
@@ -9,8 +9,10 @@ import (
 	models_v1 "github.com/codeexplorations/data-lake/models/v1"
 )
 
+type LocalIngestProcessorImpl struct{}
+
 // ProcessFile processes the file
-func ProcessFolder(folder string) ([]*models_v1.Object, error) {
+func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*models_v1.Object, error) {
 	entries, err := os.ReadDir(folder)
 	if err != nil {
 		return nil, err
@@ -20,13 +22,13 @@ func ProcessFolder(folder string) ([]*models_v1.Object, error) {
 
 	for _, entry := range entries {
 		if entry.IsDir() {
-			if processedFolderObjects, err := ProcessFolder(folder + "/" + entry.Name()); err != nil {
+			if processedFolderObjects, err := processor.ProcessFolder(folder + "/" + entry.Name()); err != nil {
 				return nil, err
 			} else {
 				processedObjects = append(processedObjects, processedFolderObjects...)
 			}
 		} else {
-			if processedFile, err := ProcessFile(folder + "/" + entry.Name()); err != nil {
+			if processedFile, err := processor.ProcessFile(folder + "/" + entry.Name()); err != nil {
 				return nil, err
 			} else {
 				processedObjects = append(processedObjects, processedFile)
@@ -38,7 +40,7 @@ func ProcessFolder(folder string) ([]*models_v1.Object, error) {
 }
 
 // ProcessFile processes the file
-func ProcessFile(fileName string) (*models_v1.Object, error) {
+func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*models_v1.Object, error) {
 	// read the file
 	data, err := os.ReadFile(fileName)
 	if err != nil {

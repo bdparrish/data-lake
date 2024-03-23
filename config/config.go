@@ -12,8 +12,9 @@ var configLock = &sync.Mutex{}
 var configInstance *Config
 
 type Config struct {
-	ConfigFile string `mapstructure:"CONFIG_FILE"`
-	DataFolder string `mapstructure:"DATA_FOLDER"`
+	ConfigFile          string `mapstructure:"CONFIG_FILE"`
+	DataFolder          string `mapstructure:"DATA_FOLDER"`
+	IngestProcessorType string `mapstructure:"INGEST_PROCESSOR_TYPE"`
 }
 
 func GetConfig() *Config {
@@ -55,11 +56,13 @@ func newConfig() (*Config, error) {
 func bindValues(v *viper.Viper) {
 	_ = v.BindEnv("CONFIG_FILE")
 	_ = v.BindEnv("DATA_FOLDER")
+	_ = v.BindEnv("INGEST_PROCESSOR_TYPE")
 }
 
 func setDefaultValues(v *viper.Viper) {
 	v.SetDefault("CONFIG_FILE", "/tmp/.env")
 	v.SetDefault("DATA_FOLDER", "/tmp/data-lake")
+	v.SetDefault("INGEST_PROCESSOR_TYPE", "local")
 }
 
 func mergeExternalConfig(v *viper.Viper) error {
