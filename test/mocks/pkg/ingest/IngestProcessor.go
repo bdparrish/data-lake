@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	modelsv1 "github.com/codeexplorations/data-lake/models/v1"
+	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
 	mock "github.com/stretchr/testify/mock"
 )
 

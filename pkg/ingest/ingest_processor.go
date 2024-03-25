@@ -1,10 +1,12 @@
 package ingest
 
 import (
+	"fmt"
 	"os"
 
-	"github.com/codeexplorations/data-lake/config"
-	models_v1 "github.com/codeexplorations/data-lake/models/v1"
+	"github.com/bufbuild/protovalidate-go"
+	"github.com/codingexplorations/data-lake/config"
+	models_v1 "github.com/codingexplorations/data-lake/models/v1"
 )
 
 type IngestProcessor interface {
@@ -19,4 +21,19 @@ func GetIngestProcessor(conf *config.Config) IngestProcessor {
 	default:
 		return &LocalIngestProcessorImpl{}
 	}
+}
+
+func validate(object *models_v1.Object) (bool, error) {
+	validator, err := protovalidate.New()
+	if err != nil {
+		return false, fmt.Errorf("failed to initialize proto validator: %v", err)
+	}
+
+	if err := validator.Validate(object); err != nil {
+		return false, fmt.Errorf("failed to validate object: %v", err)
+	} else {
+		fmt.Println("object is valid")
+	}
+
+	return true, nil
 }
