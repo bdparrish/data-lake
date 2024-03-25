@@ -17,3 +17,11 @@ run: proto ## Run main
 test: proto mocks ## Run tests
 	@echo "$(YT)Running tests ...$(NC)"
 	go test -v -cover ./...
+
+test-int: proto mocks ## Run integration tests - this will start LocalStack, await healthy LocalStack container, run tests, and clean up docker containers.
+	$(eval STACK_NAME:=test-int)
+	@echo "$(YT)Starting compose stack '${STACK_NAME}' for integration tests ...$(NC)"
+	@docker compose -p ${STACK_NAME} -f ./test/deployments/docker-compose.yml down --remove-orphans -v
+	@docker compose -p ${STACK_NAME} -f ./test/deployments/docker-compose.yml up --exit-code-from integration-test-service --remove-orphans
+	@docker compose -p ${STACK_NAME} -f ./test/deployments/docker-compose.yml down --remove-orphans -v
+	@echo "$(YT)Tests Complete.$(NC)"

@@ -15,6 +15,7 @@ type Config struct {
 	ConfigFile          string `mapstructure:"CONFIG_FILE"`
 	DataFolder          string `mapstructure:"DATA_FOLDER"`
 	IngestProcessorType string `mapstructure:"INGEST_PROCESSOR_TYPE"`
+	AwsBucketName       string `mapstructure:"AWS_BUCKET_NAME"`
 }
 
 func GetConfig() *Config {
@@ -57,12 +58,14 @@ func bindValues(v *viper.Viper) {
 	_ = v.BindEnv("CONFIG_FILE")
 	_ = v.BindEnv("DATA_FOLDER")
 	_ = v.BindEnv("INGEST_PROCESSOR_TYPE")
+	_ = v.BindEnv("AWS_BUCKET_NAME")
 }
 
 func setDefaultValues(v *viper.Viper) {
 	v.SetDefault("CONFIG_FILE", "/tmp/.env")
 	v.SetDefault("DATA_FOLDER", "/tmp/data-lake")
 	v.SetDefault("INGEST_PROCESSOR_TYPE", "local")
+	v.SetDefault("AWS_BUCKET_NAME", "ingest-bucket")
 }
 
 func mergeExternalConfig(v *viper.Viper) error {

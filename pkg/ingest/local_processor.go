@@ -1,17 +1,16 @@
 package ingest
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"strings"
 
-	"github.com/bufbuild/protovalidate-go"
-	models_v1 "github.com/codeexplorations/data-lake/models/v1"
+	models_v1 "github.com/codingexplorations/data-lake/models/v1"
 )
 
 type LocalIngestProcessorImpl struct{}
 
-// ProcessFile processes the file
+// ProcessFolder processes the file
 func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*models_v1.Object, error) {
 	entries, err := os.ReadDir(folder)
 	if err != nil {
@@ -58,22 +57,16 @@ func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*models
 		ContentSize:  int32(fileSize),
 	}
 
-	validate(object)
+	valid, err := validate(object)
+	if err != nil {
+		log.Printf("error validating object: %v\n", err)
+		return nil, err
+	}
+
+	if !valid {
+		log.Printf("object is not valid: %v\n", object)
+		return nil, nil
+	}
 
 	return object, nil
-}
-
-func validate(object *models_v1.Object) (bool, error) {
-	validator, err := protovalidate.New()
-	if err != nil {
-		return false, fmt.Errorf("failed to initialize proto validator: %v", err)
-	}
-
-	if err := validator.Validate(object); err != nil {
-		return false, fmt.Errorf("failed to validate object: %v", err)
-	} else {
-		fmt.Println("object is valid")
-	}
-
-	return true, nil
 }
