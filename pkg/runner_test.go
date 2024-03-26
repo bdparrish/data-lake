@@ -3,9 +3,9 @@ package pkg
 import (
 	"testing"
 
-	models_v1 "github.com/codeexplorations/data-lake/models/v1"
-	"github.com/codeexplorations/data-lake/pkg/config"
-	mocks "github.com/codeexplorations/data-lake/test/mocks/pkg/ingest"
+	models_v1 "github.com/codingexplorations/data-lake/models/v1"
+	"github.com/codingexplorations/data-lake/pkg/config"
+	mocks "github.com/codingexplorations/data-lake/test/mocks/pkg/ingest"
 )
 
 func TestRunner(t *testing.T) {
