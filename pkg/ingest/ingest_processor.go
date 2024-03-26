@@ -3,8 +3,8 @@ package ingest
 import (
 	"os"
 
-	"github.com/codeexplorations/data-lake/config"
 	models_v1 "github.com/codeexplorations/data-lake/models/v1"
+	"github.com/codeexplorations/data-lake/pkg/config"
 )
 
 type IngestProcessor interface {

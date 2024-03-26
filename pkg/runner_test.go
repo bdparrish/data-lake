@@ -3,8 +3,8 @@ package pkg
 import (
 	"testing"
 
-	"github.com/codeexplorations/data-lake/config"
 	models_v1 "github.com/codeexplorations/data-lake/models/v1"
+	"github.com/codeexplorations/data-lake/pkg/config"
 	mocks "github.com/codeexplorations/data-lake/test/mocks/pkg/ingest"
 )
 

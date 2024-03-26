@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"github.com/codeexplorations/data-lake/config"
+	"github.com/codeexplorations/data-lake/pkg/config"
 	"github.com/codeexplorations/data-lake/pkg/ingest"
 )
 
