@@ -16,7 +16,7 @@ run: proto ## Run main
 
 test: proto mocks ## Run tests
 	@echo "$(YT)Running tests ...$(NC)"
-	go test -v -cover ./...
+	go test -v -cover ./pkg/config/... ./pkg/ingest/... ./pkg/.
 
 test-int: proto mocks ## Run integration tests - this will start LocalStack, await healthy LocalStack container, run tests, and clean up docker containers.
 	$(eval STACK_NAME:=test-int)
