@@ -9,7 +9,7 @@ services:
     volumes:
       - "./localstack/init:/etc/localstack/init"
     environment:
-      - "SERVICES=s3"
+      - "SERVICES=s3,sqs"
       - "AWS_DEFAULT_REGION=us-east-1"
       - "DEBUG=1"
       - "DISABLE_EVENTS=1"
@@ -17,6 +17,7 @@ services:
       - "LOCALSTACK_HOST=localhost"
       - "HOSTNAME=localhost"
       - "TEST_INGEST_BUCKET_NAME=test-ingest-bucket"
+      - "TEST_INGEST_QUEUE_NAME=test-ingest-queue"
     healthcheck:
       test: 'curl -s localhost:4566/_localstack/init | grep -q -F ''"stage": "READY", "name": "setup.sh", "state": "SUCCESSFUL"'''
       interval: 2s
