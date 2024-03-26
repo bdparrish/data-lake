@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/codingexplorations/data-lake/config"
 	models_v1 "github.com/codingexplorations/data-lake/models/v1"
+	"github.com/codingexplorations/data-lake/pkg/config"
 )
 
 type IngestProcessor interface {
