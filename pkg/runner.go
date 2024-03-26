@@ -1,8 +1,8 @@
 package pkg
 
 import (
-	"github.com/codingexplorations/data-lake/config"
-	"github.com/codingexplorations/data-lake/pkg/ingest"
+	"github.com/codeexplorations/data-lake/pkg/config"
+	"github.com/codeexplorations/data-lake/pkg/ingest"
 )
 
 type Runner struct {

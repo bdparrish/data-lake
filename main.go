@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/codingexplorations/data-lake/config"
-	"github.com/codingexplorations/data-lake/pkg"
-	"github.com/codingexplorations/data-lake/pkg/ingest"
+	"github.com/codeexplorations/data-lake/pkg"
+	"github.com/codeexplorations/data-lake/pkg/config"
+	"github.com/codeexplorations/data-lake/pkg/ingest"
 )
 
 // main function that processes a local file
