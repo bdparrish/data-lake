@@ -9,7 +9,7 @@ services:
     volumes:
       - "./localstack/init:/etc/localstack/init"
     environment:
-      - "SERVICES=s3"
+      - "SERVICES=s3,sqs"
       - "AWS_DEFAULT_REGION=us-east-1"
       - "DEBUG=1"
       - "DISABLE_EVENTS=1"
@@ -17,6 +17,7 @@ services:
       - "LOCALSTACK_HOST=localhost"
       - "HOSTNAME=localhost"
       - "TEST_INGEST_BUCKET_NAME=test-ingest-bucket"
+      - "TEST_INGEST_QUEUE_NAME=test-ingest-queue"
     healthcheck:
       test: 'curl -s localhost:4566/_localstack/init | grep -q -F ''"stage": "READY", "name": "setup.sh", "state": "SUCCESSFUL"'''
       interval: 2s
@@ -44,7 +45,4 @@ services:
       - "AWS_ENDPOINT_URL_S3=http://s3.localhost.localstack.cloud:4566"
       - "CONFIG_FILE=/app/test/configs/test.yaml"
     command: >
-      sh -c "go test -v -coverprofile=./target/coverage/coverage-int.out.tmp ./pkg/aws ./models/v1 && 
-             cat ./target/coverage/coverage-int.out.tmp | grep -v ".pb.go" | grep -v "service/endpoint/" > ./target/coverage/coverage-int.out && 
-             go tool cover -html=./target/coverage/coverage-int.out -o ./target/coverage/coverage-int.html
-      "
+      sh -c "go test -v -coverprofile=./target/coverage/coverage-int.out.tmp ./pkg/aws ./models/v1"

@@ -47,3 +47,9 @@ github.com/codingexplorations/data-lake/pkg/aws/s3.go:55.2,55.22 1 0
 github.com/codingexplorations/data-lake/pkg/aws/s3.go:58.80,69.16 5 1
 github.com/codingexplorations/data-lake/pkg/aws/s3.go:69.16,71.3 1 1
 github.com/codingexplorations/data-lake/pkg/aws/s3.go:73.2,73.20 1 1
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:22.34,24.16 2 1
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:24.16,27.3 2 0
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:29.2,29.50 1 1
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:33.81,39.2 2 1
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:42.143,51.2 2 1
+github.com/codingexplorations/data-lake/pkg/aws/sqs.go:54.108,61.2 2 1
