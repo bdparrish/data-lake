@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/codingexplorations/data-lake/config"
 	"github.com/codingexplorations/data-lake/pkg"
+	"github.com/codingexplorations/data-lake/pkg/config"
 	"github.com/codingexplorations/data-lake/pkg/ingest"
 )
 
