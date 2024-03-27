@@ -27,3 +27,16 @@ test-int: proto mocks ## Run integration tests - this will start LocalStack, awa
 	@echo "$(YT)Tests Complete.$(NC)"
 
 test: test-unit test-int ## Run all tests
+
+build: ## Builds the docker image
+	@echo -e "$(YT)Building data-lake docker image ...$(NC)"
+	@docker build --platform linux/amd64 -t data-lake:latest -f deploy/Dockerfile .
+	@docker scout quickview data-lake:latest
+
+start: ## Start the docker stack
+	@echo -e "$(YT)Running data-lake docker stack ...$(NC)"
+	@docker compose -p data-lake --env-file deploy/.env -f deploy/docker-compose.yml up --remove-orphans
+
+stop: ## Stop the docker stack
+	@echo -e "$(YT)Stopping data-lake docker stack ...$(NC)"
+	@docker compose -p data-lake -f deploy/docker-compose.yml down --remove-orphans
