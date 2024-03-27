@@ -18,6 +18,8 @@ func GetIngestProcessor(conf *config.Config) IngestProcessor {
 	switch os.Getenv(conf.IngestProcessorType) {
 	case "local":
 		return &LocalIngestProcessorImpl{}
+	case "localstack":
+		return &S3IngestProcessorImpl{}
 	default:
 		return &LocalIngestProcessorImpl{}
 	}
