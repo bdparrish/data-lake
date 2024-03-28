@@ -63,9 +63,6 @@ func (client *S3) HeadObject(bucket, key string) (*s3.HeadObjectOutput, error) {
 
 	result, err := client.Client.HeadObject(context.TODO(), input)
 
-	log.Println("HeadObjectOutput: ", result)
-	log.Println("HeadObjectError: ", err)
-
 	if err != nil {
 		return nil, err
 	}
