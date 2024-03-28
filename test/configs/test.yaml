@@ -1,2 +1,3 @@
 AWS_BUCKET_NAME: test-ingest-bucket
 AWS_QUEUE_NAME: test-ingest-queue
+LOGGING_LEVEL: DEBUG

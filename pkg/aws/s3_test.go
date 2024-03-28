@@ -2,24 +2,26 @@ package aws
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"os"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/codingexplorations/data-lake/pkg/config"
+	"github.com/codingexplorations/data-lake/pkg/log"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestS3Client_HeadObject(t *testing.T) {
+	logger := log.NewConsoleLog()
 	s3Client, _ := NewS3()
 
 	conf := config.GetConfig()
 
 	objectKey := "test/something/test.txt"
 
-	log.Printf("uploading object to bucket %v with key %v", conf.AwsBucketName, objectKey)
+	logger.Debug(fmt.Sprintf("uploading object to bucket %v with key %v", conf.AwsBucketName, objectKey))
 
 	putObjectOutput, err := uploadLocalObject(
 		s3Client,
@@ -31,10 +33,10 @@ func TestS3Client_HeadObject(t *testing.T) {
 		},
 	)
 
-	log.Printf("putObjectOutput: %v", putObjectOutput)
+	logger.Debug(fmt.Sprintf("putObjectOutput: %v", putObjectOutput))
 
 	if err != nil {
-		log.Printf("failed to upload object: %v", err)
+		logger.Debug(fmt.Sprintf("failed to upload object: %v", err))
 		t.Error("failed to upload object")
 	}
 

@@ -2,11 +2,12 @@ package aws
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsSdkConfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/codingexplorations/data-lake/pkg/log"
 )
 
 type SqsClient interface {
@@ -22,7 +23,7 @@ type Sqs struct {
 func NewSqs() (SqsClient, error) {
 	cfg, err := awsSdkConfig.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		log.Printf("cannot load the AWS configs: %s", err)
+		log.NewConsoleLog().Error(fmt.Sprintf("cannot load the AWS configs: %s", err))
 		return Sqs{}, err
 	}
 

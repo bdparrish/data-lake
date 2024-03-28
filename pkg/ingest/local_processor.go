@@ -1,11 +1,12 @@
 package ingest
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"strings"
 
 	models_v1 "github.com/codingexplorations/data-lake/models/v1"
+	"github.com/codingexplorations/data-lake/pkg/log"
 )
 
 type LocalIngestProcessorImpl struct{}
@@ -59,12 +60,12 @@ func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*models
 
 	valid, err := validate(object)
 	if err != nil {
-		log.Printf("error validating object: %v\n", err)
+		log.NewConsoleLog().Error(fmt.Sprintf("error validating object: %v\n", err))
 		return nil, err
 	}
 
 	if !valid {
-		log.Printf("object is not valid: %v\n", object)
+		log.NewConsoleLog().Error(fmt.Sprintf("object is not valid: %v\n", object))
 		return nil, nil
 	}
 

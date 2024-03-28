@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"fmt"
-	"log"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -11,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/codingexplorations/data-lake/pkg/config"
+	"github.com/codingexplorations/data-lake/pkg/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -115,7 +115,7 @@ func TestSqsClient_RemoveMessage(t *testing.T) {
 func sendMessage(delay int32, attributes map[string]types.MessageAttributeValue, body string, queueUrl *string) (*sqs.SendMessageOutput, error) {
 	cfg, err := awsSdkConfig.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		log.Printf("cannot load the AWS configs: %s", err)
+		log.NewConsoleLog().Error(fmt.Sprintf("cannot load the AWS configs: %s", err))
 		return nil, err
 	}
 
