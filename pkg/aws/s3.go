@@ -2,12 +2,13 @@ package aws
 
 import (
 	"context"
-	"log"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awsSdkConfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/codingexplorations/data-lake/pkg/log"
 )
 
 type S3Client interface {
@@ -47,7 +48,7 @@ func (client *S3) ListObjects(bucketName string, prefix *string) ([]types.Object
 
 	var contents []types.Object
 	if err != nil {
-		log.Printf("couldn't list objects in bucket %v.\n", bucketName)
+		log.NewConsoleLog().Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", bucketName))
 	} else {
 		contents = result.Contents
 	}

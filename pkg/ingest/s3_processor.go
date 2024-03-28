@@ -1,12 +1,13 @@
 package ingest
 
 import (
-	"log"
+	"fmt"
 	"strings"
 
 	models_v1 "github.com/codingexplorations/data-lake/models/v1"
 	"github.com/codingexplorations/data-lake/pkg/aws"
 	"github.com/codingexplorations/data-lake/pkg/config"
+	"github.com/codingexplorations/data-lake/pkg/log"
 )
 
 type S3IngestProcessorImpl struct {
@@ -25,7 +26,7 @@ func NewS3IngestProcessorImpl(conf *config.Config, s3Client aws.S3Client) *S3Ing
 func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_v1.Object, error) {
 	objects, err := processor.s3Client.ListObjects(processor.conf.AwsBucketName, &prefix)
 	if err != nil {
-		log.Printf("couldn't list objects in bucket %v.\n", processor.conf.AwsBucketName)
+		log.NewConsoleLog().Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", processor.conf.AwsBucketName))
 		return nil, err
 	}
 
@@ -46,7 +47,7 @@ func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_
 func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Object, error) {
 	headObject, err := processor.s3Client.HeadObject(processor.conf.AwsBucketName, key)
 	if err != nil {
-		log.Printf("couldn't get object %v in bucket %v.\n", key, processor.conf.AwsBucketName)
+		log.NewConsoleLog().Error(fmt.Sprintf("couldn't get object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
 		return nil, err
 	}
 
@@ -61,12 +62,12 @@ func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Obje
 
 	valid, err := validate(object)
 	if err != nil {
-		log.Printf("error validating object: %v\n", err)
+		log.NewConsoleLog().Error(fmt.Sprintf("error validating object: %v\n", err))
 		return nil, err
 	}
 
 	if !valid {
-		log.Printf("object is invalid: %v\n", object)
+		log.NewConsoleLog().Error(fmt.Sprintf("object is invalid: %v\n", object))
 		return nil, nil
 	}
 

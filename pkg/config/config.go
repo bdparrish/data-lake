@@ -17,6 +17,7 @@ type Config struct {
 	IngestProcessorType string `mapstructure:"INGEST_PROCESSOR_TYPE"`
 	AwsBucketName       string `mapstructure:"AWS_BUCKET_NAME"`
 	AwsQueueName        string `mapstructure:"AWS_QUEUE_NAME"`
+	LoggingLevel        string `mapstructure:"LOGGING_LEVEL"`
 }
 
 func GetConfig() *Config {
@@ -61,6 +62,7 @@ func bindValues(v *viper.Viper) {
 	_ = v.BindEnv("INGEST_PROCESSOR_TYPE")
 	_ = v.BindEnv("AWS_BUCKET_NAME")
 	_ = v.BindEnv("AWS_QUEUE_NAME")
+	_ = v.BindEnv("LOGGING_LEVEL")
 }
 
 func setDefaultValues(v *viper.Viper) {
@@ -69,6 +71,7 @@ func setDefaultValues(v *viper.Viper) {
 	v.SetDefault("INGEST_PROCESSOR_TYPE", "local")
 	v.SetDefault("AWS_BUCKET_NAME", "ingest-bucket")
 	v.SetDefault("AWS_QUEUE_NAME", "ingest-queue")
+	v.SetDefault("LOGGING_LEVEL", "INFO")
 }
 
 func mergeExternalConfig(v *viper.Viper) error {
