@@ -9,7 +9,17 @@ import (
 	"github.com/codingexplorations/data-lake/pkg/log"
 )
 
-type LocalIngestProcessorImpl struct{}
+type LocalIngestProcessorImpl struct {
+	logger log.Logger
+}
+
+func NewLocalIngestProcessor() *LocalIngestProcessorImpl {
+	logger := log.NewConsoleLog()
+
+	return &LocalIngestProcessorImpl{
+		logger: logger,
+	}
+}
 
 // ProcessFolder processes the file
 func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*models_v1.Object, error) {
@@ -60,12 +70,12 @@ func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*models
 
 	valid, err := validate(object)
 	if err != nil {
-		log.NewConsoleLog().Error(fmt.Sprintf("error validating object: %v\n", err))
+		processor.logger.Error(fmt.Sprintf("error validating object: %v\n", err))
 		return nil, err
 	}
 
 	if !valid {
-		log.NewConsoleLog().Error(fmt.Sprintf("object is not valid: %v\n", object))
+		processor.logger.Error(fmt.Sprintf("object is not valid: %v\n", object))
 		return nil, nil
 	}
 

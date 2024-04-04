@@ -4,9 +4,7 @@ RUN apk --no-cache add curl
 
 WORKDIR /app
 
-COPY . .
-
-RUN env GOOS=linux GOARCH=amd64 go build -o ./target/data-lake main.go
+COPY ./target/data-lake /app/target/data-lake
 
 RUN addgroup -g 1000 datalake && \
     adduser -D -H -u 1000 -G datalake datalake && \
