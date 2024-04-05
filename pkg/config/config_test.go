@@ -34,4 +34,8 @@ func TestConfig_LoadingDefaultValues(t *testing.T) {
 	assert.Equal(t, "/tmp/data-lake", config.DataFolder)
 	assert.Equal(t, "local", config.IngestProcessorType)
 	assert.Equal(t, "ingest-bucket", config.AwsBucketName)
+	assert.Equal(t, "ingest-queue", config.AwsIngestQueueName)
+	assert.Equal(t, "logger-queue", config.AwsLoggerQueueName)
+	assert.Equal(t, "CONSOLE", config.LoggerType)
+	assert.Equal(t, "INFO", config.LoggerLevel)
 }

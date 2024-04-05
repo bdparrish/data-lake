@@ -1,13 +1,12 @@
 package log
 
 import (
-	"fmt"
 	"log"
 	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/codingexplorations/data-lake/pkg/config"
-	"golang.org/x/exp/slices"
 )
 
 var Reset = "\033[0m"
@@ -22,42 +21,32 @@ type Logger interface {
 	Debug(msg string)
 }
 
-type ConsoleLog struct{}
+var loggerLock = &sync.Mutex{}
 
-func NewConsoleLog() *ConsoleLog {
-	return &ConsoleLog{}
-}
+var loggerInstance Logger
 
-func (logger *ConsoleLog) Error(msg string) {
-	if slices.Contains([]string{"ERROR", "WARN", "INFO", "DEBUG"}, config.GetConfig().LoggingLevel) {
-		file, line := getCaller(2)
-		msg = fmt.Sprintf("[ERROR] %s#%d - %s", file, line, msg)
-		log.Println(Red + msg + Reset)
+func GetLogger() (Logger, error) {
+	if loggerInstance == nil {
+		loggerLock.Lock()
+		defer loggerLock.Unlock()
+		if loggerInstance == nil {
+			config := config.GetConfig()
+			switch config.LoggerType {
+			case "SERVICE":
+				serviceLog, err := NewSqsLog()
+				if err != nil {
+					log.Println("failed to create service log instance")
+					return nil, err
+				}
+				loggerInstance = serviceLog
+			case "CONSOLE":
+			default:
+				loggerInstance = NewConsoleLog()
+			}
+		}
 	}
-}
 
-func (logger *ConsoleLog) Warn(msg string) {
-	if slices.Contains([]string{"WARN", "INFO", "DEBUG"}, config.GetConfig().LoggingLevel) {
-		file, line := getCaller(2)
-		msg = fmt.Sprintf("[WARN] %s#%d - %s", file, line, msg)
-		log.Println(Yellow + msg + Reset)
-	}
-}
-
-func (logger *ConsoleLog) Info(msg string) {
-	if slices.Contains([]string{"INFO", "DEBUG"}, config.GetConfig().LoggingLevel) {
-		file, line := getCaller(2)
-		msg = fmt.Sprintf("[INFO] %s#%d - %s", file, line, msg)
-		log.Println(msg)
-	}
-}
-
-func (logger *ConsoleLog) Debug(msg string) {
-	if slices.Contains([]string{"DEBUG"}, config.GetConfig().LoggingLevel) {
-		file, line := getCaller(2)
-		msg = fmt.Sprintf("[DEBUG] %s#%d - %s", file, line, msg)
-		log.Println(Cyan + msg + Reset)
-	}
+	return loggerInstance, nil
 }
 
 func getCaller(skip int) (string, int32) {

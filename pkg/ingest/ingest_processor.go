@@ -2,7 +2,7 @@ package ingest
 
 import (
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/bufbuild/protovalidate-go"
 	models_v1 "github.com/codingexplorations/data-lake/models/v1"
@@ -15,13 +15,17 @@ type IngestProcessor interface {
 }
 
 func GetIngestProcessor(conf *config.Config) IngestProcessor {
-	switch os.Getenv(conf.IngestProcessorType) {
+	log.Println("here")
+	switch conf.IngestProcessorType {
 	case "local":
-		return &LocalIngestProcessorImpl{}
+		log.Println("Using local ingest processor")
+		return NewLocalIngestProcessor()
 	case "localstack":
-		return &S3IngestProcessorImpl{}
+		log.Println("Using localstack ingest processor")
+		return NewS3IngestProcessorImpl(conf)
 	default:
-		return &LocalIngestProcessorImpl{}
+		log.Println("Using default ingest processor")
+		return NewLocalIngestProcessor()
 	}
 }
 
@@ -33,8 +37,6 @@ func validate(object *models_v1.Object) (bool, error) {
 
 	if err := validator.Validate(object); err != nil {
 		return false, fmt.Errorf("failed to validate object: %v", err)
-	} else {
-		fmt.Println("object is valid")
 	}
 
 	return true, nil

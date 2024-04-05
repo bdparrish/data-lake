@@ -18,7 +18,7 @@ func TestSqsClient_GetQueueUrl(t *testing.T) {
 	conf := config.GetConfig()
 	sqsClient, _ := NewSqs()
 
-	result, err := sqsClient.GetQueueUrl(conf.AwsQueueName)
+	result, err := sqsClient.GetQueueUrl(conf.AwsIngestQueueName)
 	if err != nil {
 		t.Errorf("Got an error getting the queue URL: %v", err)
 		return
@@ -26,7 +26,7 @@ func TestSqsClient_GetQueueUrl(t *testing.T) {
 
 	assert.NotNil(t, result)
 	assert.Regexp(t,
-		fmt.Sprintf("^http://sqs\\..*?\\.localhost.*?:4566/000000000000/%s$", conf.AwsQueueName),
+		fmt.Sprintf("^http://sqs\\..*?\\.localhost.*?:4566/000000000000/%s$", conf.AwsIngestQueueName),
 		*result.QueueUrl,
 		"Wrong queue created",
 	)
@@ -37,7 +37,7 @@ func TestSqsClient_GetMessages(t *testing.T) {
 	sqsClient, _ := NewSqs()
 
 	// Get URL of queue
-	result, err := sqsClient.GetQueueUrl(conf.AwsQueueName)
+	result, err := sqsClient.GetQueueUrl(conf.AwsIngestQueueName)
 	if err != nil {
 		t.Errorf("Got an error getting the queue URL: %v", err)
 		return
@@ -77,7 +77,7 @@ func TestSqsClient_RemoveMessage(t *testing.T) {
 	sqsClient, _ := NewSqs()
 
 	// Get URL of queue
-	result, err := sqsClient.GetQueueUrl(conf.AwsQueueName)
+	result, err := sqsClient.GetQueueUrl(conf.AwsIngestQueueName)
 	if err != nil {
 		t.Errorf("Got an error getting the queue URL: %v", err)
 		return

@@ -11,7 +11,8 @@ echo "########### Setting testing profile ###########"
 export AWS_DEFAULT_PROFILE=localstack
 
 # Create queues
-awslocal sqs create-queue --region $AWS_REGION --queue-name "$AWS_QUEUE_NAME" --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name "$AWS_INGEST_QUEUE_NAME" --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
+awslocal sqs create-queue --region $AWS_REGION --queue-name "$AWS_LOGGER_QUEUE_NAME" --attributes '{"ReceiveMessageWaitTimeSeconds": "20"}'
 
 export LOCALSTACK_URL="${AWS_ENDPOINT_URL}"
 
@@ -22,7 +23,7 @@ awslocal s3api put-bucket-cors --bucket "${AWS_BUCKET_NAME}" --cors-configuratio
 
 # Get SQS Event ARN
 INGEST_QUEUE_EVENT_SQS_ARN=$(awslocal sqs get-queue-attributes \
-  --queue-url="$(awslocal sqs get-queue-url --queue-name "${AWS_QUEUE_NAME}" --query 'QueueUrl' --output text)" \
+  --queue-url="$(awslocal sqs get-queue-url --queue-name "${AWS_INGEST_QUEUE_NAME}" --query 'QueueUrl' --output text)" \
   --attribute-names 'QueueArn' \
   --query 'Attributes.QueueArn' \
   --output text)
