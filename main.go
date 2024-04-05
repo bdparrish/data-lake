@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 
 	"github.com/codingexplorations/data-lake/pkg"
 	"github.com/codingexplorations/data-lake/pkg/config"
@@ -21,5 +22,12 @@ func main() {
 	conf := config.GetConfig()
 	processor := ingest.GetIngestProcessor(conf)
 
-	pkg.NewRunner(conf, processor).Run()
+	r := pkg.NewRunner(conf, processor)
+
+	r.Config.Print()
+
+	for {
+		r.Run()
+		time.Sleep(10 * time.Second)
+	}
 }

@@ -1,8 +1,6 @@
 package pkg
 
 import (
-	"time"
-
 	"github.com/codingexplorations/data-lake/pkg/config"
 	"github.com/codingexplorations/data-lake/pkg/ingest"
 )
@@ -20,9 +18,5 @@ func NewRunner(conf *config.Config, processor ingest.IngestProcessor) *Runner {
 }
 
 func (r *Runner) Run() {
-	r.Config.Print()
-	for {
-		r.Processor.ProcessFolder(r.Config.DataFolder)
-		time.Sleep(10 * time.Second)
-	}
+	r.Processor.ProcessFolder(r.Config.DataFolder)
 }
