@@ -14,13 +14,20 @@ import (
 type S3Client interface {
 	ListObjects(bucketName string, prefix *string) ([]types.Object, error)
 	HeadObject(bucketName string, objectKey string) (*s3.HeadObjectOutput, error)
+	DeleteObjects(bucketName string, objectKeys []string) (*s3.DeleteObjectsOutput, error)
 }
 
 type S3 struct {
 	Client *s3.Client
+	Logger log.Logger
 }
 
 func NewS3() (S3, error) {
+	logger, err := log.GetLogger()
+	if err != nil {
+		return S3{}, err
+	}
+
 	cfg, err := awsSdkConfig.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return S3{}, err
@@ -30,6 +37,7 @@ func NewS3() (S3, error) {
 
 	s3Client := S3{
 		Client: c,
+		Logger: logger,
 	}
 
 	return s3Client, nil
@@ -48,7 +56,7 @@ func (client *S3) ListObjects(bucketName string, prefix *string) ([]types.Object
 
 	var contents []types.Object
 	if err != nil {
-		log.NewConsoleLog().Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", bucketName))
+		client.Logger.Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", bucketName))
 	} else {
 		contents = result.Contents
 	}
@@ -69,4 +77,20 @@ func (client *S3) HeadObject(bucket, key string) (*s3.HeadObjectOutput, error) {
 	}
 
 	return result, nil
+}
+
+// DeleteObjects deletes a list of objects from a bucket.
+func (client *S3) DeleteObjects(bucketName string, keys []string) (*s3.DeleteObjectsOutput, error) {
+	var objectIds []types.ObjectIdentifier
+	for _, key := range keys {
+		objectIds = append(objectIds, types.ObjectIdentifier{Key: aws.String(key)})
+	}
+	resp, err := client.Client.DeleteObjects(context.TODO(), &s3.DeleteObjectsInput{
+		Bucket: aws.String(bucketName),
+		Delete: &types.Delete{Objects: objectIds},
+	})
+	if err != nil {
+		client.Logger.Error(fmt.Sprintf("could not delete objects from bucket %v. Error: %v", bucketName, err))
+	}
+	return resp, err
 }
