@@ -15,7 +15,6 @@ func main() {
 	logger := log.NewConsoleLog()
 
 	for _, e := range os.Environ() {
-		// pair := strings.SplitN(e, "=", 2)
 		logger.Info(e)
 	}
 

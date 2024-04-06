@@ -1,8 +1,9 @@
 package ingest
 
 import (
-	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 	"testing"
+
+	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go/aws"
@@ -14,9 +15,8 @@ import (
 
 func Test_S3Processor_NewS3IngestProcessorImpl(t *testing.T) {
 	conf := config.GetConfig()
-	logger := log.NewConsoleLog()
 
-	processor := NewS3IngestProcessorImpl(conf, logger)
+	processor := NewS3IngestProcessorImpl(conf)
 
 	assert.NotNil(t, processor)
 }

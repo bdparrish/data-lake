@@ -17,7 +17,12 @@ type S3IngestProcessorImpl struct {
 	s3Client aws.S3Client
 }
 
-func NewS3IngestProcessorImpl(conf *config.Config, logger log.Logger) *S3IngestProcessorImpl {
+func NewS3IngestProcessorImpl(conf *config.Config) *S3IngestProcessorImpl {
+	logger, err := log.GetLogger()
+	if err != nil {
+		golog.Fatalf("couldn't create logger: %v\n", err)
+	}
+
 	logger.Info("Using S3 ingest processor")
 
 	s3Client, err := aws.NewS3()
@@ -35,7 +40,8 @@ func NewS3IngestProcessorImpl(conf *config.Config, logger log.Logger) *S3IngestP
 
 // ProcessFolder processes the file
 func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_v1.Object, error) {
-	golog.Println("Processing folder: ", prefix)
+	processor.logger.Info(fmt.Sprintf("Processing folder: %s", prefix))
+
 	objects, err := processor.s3Client.ListObjects(processor.conf.AwsBucketName, &prefix)
 	if err != nil {
 		processor.logger.Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", processor.conf.AwsBucketName))
@@ -58,6 +64,8 @@ func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_
 
 // ProcessFile processes the file
 func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Object, error) {
+	processor.logger.Info(fmt.Sprintf("Processing key: %s", key))
+
 	headObject, err := processor.s3Client.HeadObject(processor.conf.AwsBucketName, key)
 	if err != nil {
 		processor.logger.Error(fmt.Sprintf("couldn't get object %v in bucket %v.\n", key, processor.conf.AwsBucketName))

@@ -40,6 +40,7 @@ func GetLogger() (Logger, error) {
 				}
 				loggerInstance = serviceLog
 			case "CONSOLE":
+				loggerInstance = NewConsoleLog()
 			default:
 				loggerInstance = NewConsoleLog()
 			}
