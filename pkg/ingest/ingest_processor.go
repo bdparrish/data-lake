@@ -2,7 +2,8 @@ package ingest
 
 import (
 	"fmt"
-	"log"
+	"github.com/codingexplorations/data-lake/pkg/log"
+	golog "log"
 
 	"github.com/bufbuild/protovalidate-go"
 	models_v1 "github.com/codingexplorations/data-lake/models/v1"
@@ -15,16 +16,20 @@ type IngestProcessor interface {
 }
 
 func GetIngestProcessor(conf *config.Config) IngestProcessor {
-	log.Println("here")
+	golog.Println("here")
 	switch conf.IngestProcessorType {
 	case "local":
-		log.Println("Using local ingest processor")
+		golog.Println("Using local ingest processor")
 		return NewLocalIngestProcessor()
 	case "localstack":
-		log.Println("Using localstack ingest processor")
-		return NewS3IngestProcessorImpl(conf)
+		golog.Println("Using localstack ingest processor")
+		logger, err := log.NewSqsLog()
+		if err != nil {
+			golog.Fatalf("couldn't create logger: %v\n", err)
+		}
+		return NewS3IngestProcessorImpl(conf, logger)
 	default:
-		log.Println("Using default ingest processor")
+		golog.Println("Using default ingest processor")
 		return NewLocalIngestProcessor()
 	}
 }

@@ -17,12 +17,7 @@ type S3IngestProcessorImpl struct {
 	s3Client aws.S3Client
 }
 
-func NewS3IngestProcessorImpl(conf *config.Config) *S3IngestProcessorImpl {
-	logger, err := log.NewSqsLog()
-	if err != nil {
-		golog.Fatalf("couldn't create logger: %v\n", err)
-	}
-
+func NewS3IngestProcessorImpl(conf *config.Config, logger log.Logger) *S3IngestProcessorImpl {
 	logger.Info("Using S3 ingest processor")
 
 	s3Client, err := aws.NewS3()
