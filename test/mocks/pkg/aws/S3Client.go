@@ -14,6 +14,36 @@ type S3Client struct {
 	mock.Mock
 }
 
+// DeleteObjects provides a mock function with given fields: bucketName, objectKeys
+func (_m *S3Client) DeleteObjects(bucketName string, objectKeys []string) (*s3.DeleteObjectsOutput, error) {
+	ret := _m.Called(bucketName, objectKeys)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteObjects")
+	}
+
+	var r0 *s3.DeleteObjectsOutput
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string, []string) (*s3.DeleteObjectsOutput, error)); ok {
+		return rf(bucketName, objectKeys)
+	}
+	if rf, ok := ret.Get(0).(func(string, []string) *s3.DeleteObjectsOutput); ok {
+		r0 = rf(bucketName, objectKeys)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*s3.DeleteObjectsOutput)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, []string) error); ok {
+		r1 = rf(bucketName, objectKeys)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // HeadObject provides a mock function with given fields: bucketName, objectKey
 func (_m *S3Client) HeadObject(bucketName string, objectKey string) (*s3.HeadObjectOutput, error) {
 	ret := _m.Called(bucketName, objectKey)
