@@ -90,6 +90,17 @@ func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Obje
 	if !valid {
 		processor.logger.Error(fmt.Sprintf("object is invalid: %v\n", object))
 		return nil, nil
+	} else {
+		deleteObjectsOutput, err := processor.s3Client.DeleteObjects(processor.conf.AwsBucketName, []string{key})
+		if err != nil {
+			processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+			return nil, err
+		}
+
+		if len(deleteObjectsOutput.Deleted) == 0 {
+			processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+			return nil, nil
+		}
 	}
 
 	return object, nil

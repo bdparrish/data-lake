@@ -43,6 +43,23 @@ func Test_S3Processor_ProcessFolder(t *testing.T) {
 	s3Client.On("HeadObject", conf.AwsBucketName, "test/test1.txt").Return(headObjectOutput, nil)
 	s3Client.On("HeadObject", conf.AwsBucketName, "test/test2.txt").Return(headObjectOutput, nil)
 
+	deleteObjectsOutput1 := &s3.DeleteObjectsOutput{
+		Deleted: []types.DeletedObject{
+			{
+				Key: aws.String("test/test1.txt"),
+			},
+		},
+	}
+	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test1.txt"}).Return(deleteObjectsOutput1, nil)
+	deleteObjectsOutput2 := &s3.DeleteObjectsOutput{
+		Deleted: []types.DeletedObject{
+			{
+				Key: aws.String("test/test2.txt"),
+			},
+		},
+	}
+	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test2.txt"}).Return(deleteObjectsOutput2, nil)
+
 	processor := &S3IngestProcessorImpl{
 		conf:     conf,
 		logger:   log.NewConsoleLog(),
@@ -73,6 +90,15 @@ func Test_S3Processor_ProcessFile(t *testing.T) {
 		ContentLength: aws.Int64(15),
 	}
 	s3Client.On("HeadObject", conf.AwsBucketName, "test/test.txt").Return(headObjectOutput, nil)
+
+	deleteObjectsOutput1 := &s3.DeleteObjectsOutput{
+		Deleted: []types.DeletedObject{
+			{
+				Key: aws.String("test/test.txt"),
+			},
+		},
+	}
+	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test.txt"}).Return(deleteObjectsOutput1, nil)
 
 	processor := &S3IngestProcessorImpl{
 		conf:     conf,

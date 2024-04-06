@@ -13,6 +13,37 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestS3Client_ListObjects(t *testing.T) {
+	logger := log.NewConsoleLog()
+	s3Client, _ := NewS3()
+
+	conf := config.GetConfig()
+
+	objectKey := "test/something/test.txt"
+
+	putObjectOutput, err := uploadLocalObject(
+		s3Client,
+		conf.AwsBucketName,
+		objectKey,
+		"/app/test/files/ingest/test.txt",
+		map[string]string{
+			"key1": "value1",
+		},
+	)
+
+	logger.Debug(fmt.Sprintf("putObjectOutput: %v", putObjectOutput))
+
+	if err != nil {
+		logger.Debug(fmt.Sprintf("failed to upload object: %v", err))
+		t.Error("failed to upload object")
+	}
+
+	objects, _ := s3Client.ListObjects(conf.AwsBucketName, nil)
+
+	assert.NotNil(t, objects)
+	assert.Len(t, objects, 1)
+}
+
 func TestS3Client_HeadObject(t *testing.T) {
 	logger := log.NewConsoleLog()
 	s3Client, _ := NewS3()
@@ -69,6 +100,35 @@ func TestS3Client_HeadObjectBadBucket(t *testing.T) {
 	}
 
 	assert.Error(t, err)
+}
+
+func TestS3Client_DeleteObjects(t *testing.T) {
+	logger := log.NewConsoleLog()
+	s3Client, _ := NewS3()
+
+	conf := config.GetConfig()
+
+	objectKey := "test/something/test.txt"
+
+	_, err := uploadLocalObject(
+		s3Client,
+		conf.AwsBucketName,
+		objectKey,
+		"/app/test/files/ingest/test.txt",
+		map[string]string{
+			"key1": "value1",
+		},
+	)
+
+	if err != nil {
+		logger.Debug(fmt.Sprintf("failed to upload object: %v", err))
+		t.Error("failed to upload object")
+	}
+
+	deleteObjectsOutput, _ := s3Client.DeleteObjects(conf.AwsBucketName, []string{objectKey})
+
+	assert.NotNil(t, deleteObjectsOutput)
+	assert.Len(t, deleteObjectsOutput.Deleted, 1)
 }
 
 func uploadLocalObject(s3Client S3, bucketName string, objectKey string, fileName string, metadata map[string]string) (*s3.PutObjectOutput, error) {
