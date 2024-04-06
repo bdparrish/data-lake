@@ -53,7 +53,7 @@ put-object:
 
 read-ingest-messages:
 	@echo -e "$(YT)Reading ingest messages from SQS ...$(NC)"
-	@aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://localhost:4566/000000000000/data-lake-ingest-queue
+	@aws --endpoint-url=http://localhost:4566 sqs receive-message --max-number-of-messages 10 --queue-url http://localhost:4566/000000000000/data-lake-ingest-queue
 
 purge-ingest-messages:
 	@echo -e "$(YT)Purging ingest messages from SQS ...$(NC)"
@@ -61,7 +61,7 @@ purge-ingest-messages:
 
 read-log-messages:
 	@echo -e "$(YT)Reading log messages from SQS ...$(NC)"
-	@aws --endpoint-url=http://localhost:4566 sqs receive-message --queue-url http://localhost:4566/000000000000/data-lake-logger-queue
+	@aws --endpoint-url=http://localhost:4566 sqs receive-message --max-number-of-messages 10 --queue-url http://localhost:4566/000000000000/data-lake-logger-queue
 
 purge-log-messages:
 	@echo -e "$(YT)Purging log messages from SQS ...$(NC)"

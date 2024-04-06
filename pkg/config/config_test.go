@@ -24,7 +24,7 @@ func TestConfig_LoadFails(t *testing.T) {
 }
 
 func TestConfig_LoadingDefaultValues(t *testing.T) {
-	t.Setenv("CONFIG_FILE", "") // reset Arrakis configuration
+	t.Setenv("CONFIG_FILE", "") // reset configuration
 
 	config, err := newConfig()
 	if err != nil {

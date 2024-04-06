@@ -2,6 +2,7 @@ package ingest
 
 import (
 	"fmt"
+	golog "log"
 	"os"
 	"strings"
 
@@ -14,7 +15,10 @@ type LocalIngestProcessorImpl struct {
 }
 
 func NewLocalIngestProcessor() *LocalIngestProcessorImpl {
-	logger := log.NewConsoleLog()
+	logger, err := log.GetLogger()
+	if err != nil {
+		golog.Fatalf("couldn't create logger: %v\n", err)
+	}
 
 	return &LocalIngestProcessorImpl{
 		logger: logger,
