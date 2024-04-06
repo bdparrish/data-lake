@@ -14,9 +14,9 @@ type S3Client struct {
 	mock.Mock
 }
 
-// DeleteObjects provides a mock function with given fields: bucketName, objectKeys
-func (_m *S3Client) DeleteObjects(bucketName string, objectKeys []string) (*s3.DeleteObjectsOutput, error) {
-	ret := _m.Called(bucketName, objectKeys)
+// DeleteObjects provides a mock function with given fields: bucketName, keys
+func (_m *S3Client) DeleteObjects(bucketName string, keys []string) (*s3.DeleteObjectsOutput, error) {
+	ret := _m.Called(bucketName, keys)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteObjects")
@@ -25,10 +25,10 @@ func (_m *S3Client) DeleteObjects(bucketName string, objectKeys []string) (*s3.D
 	var r0 *s3.DeleteObjectsOutput
 	var r1 error
 	if rf, ok := ret.Get(0).(func(string, []string) (*s3.DeleteObjectsOutput, error)); ok {
-		return rf(bucketName, objectKeys)
+		return rf(bucketName, keys)
 	}
 	if rf, ok := ret.Get(0).(func(string, []string) *s3.DeleteObjectsOutput); ok {
-		r0 = rf(bucketName, objectKeys)
+		r0 = rf(bucketName, keys)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*s3.DeleteObjectsOutput)
@@ -36,7 +36,7 @@ func (_m *S3Client) DeleteObjects(bucketName string, objectKeys []string) (*s3.D
 	}
 
 	if rf, ok := ret.Get(1).(func(string, []string) error); ok {
-		r1 = rf(bucketName, objectKeys)
+		r1 = rf(bucketName, keys)
 	} else {
 		r1 = ret.Error(1)
 	}
