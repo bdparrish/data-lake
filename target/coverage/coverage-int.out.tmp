@@ -72,6 +72,11 @@ github.com/codingexplorations/data-lake/models/v1/schema.pb.go:322.11,323.24 1 0
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:324.11,325.28 1 0
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:326.12,327.15 1 0
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:331.2,349.43 6 0
+github.com/codingexplorations/data-lake/pkg/db/postgres.go:13.52,25.16 3 1
+github.com/codingexplorations/data-lake/pkg/db/postgres.go:25.16,26.13 1 0
+github.com/codingexplorations/data-lake/pkg/db/postgres.go:29.2,37.16 5 1
+github.com/codingexplorations/data-lake/pkg/db/postgres.go:37.16,38.13 1 0
+github.com/codingexplorations/data-lake/pkg/db/postgres.go:41.2,41.17 1 1
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:52.44,56.2 3 0
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:58.39,60.2 1 0
 github.com/codingexplorations/data-lake/models/v1/schema.pb.go:62.62,64.2 1 0
