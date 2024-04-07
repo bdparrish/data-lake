@@ -2,6 +2,7 @@ package ingest
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,18 +10,20 @@ import (
 
 func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 	tests := []struct {
-		name     string
-		folder   string
-		location string
+		name      string
+		folder    string
+		subfolder string
+		location  string
 	}{
 		{
-			name:     "directory",
-			folder:   "/../../test/files",
-			location: "/ingest/test.txt",
+			name:      "directory",
+			folder:    "/test",
+			subfolder: "files",
+			location:  "/test.txt",
 		},
 		{
 			name:     "file",
-			folder:   "/../../test/files/ingest",
+			folder:   "/test",
 			location: "/test.txt",
 		},
 	}
@@ -30,13 +33,18 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 			processor := &LocalIngestProcessorImpl{}
 
 			pwd, _ := os.Getwd()
+			_ = os.MkdirAll(pwd+tc.folder+"/"+tc.subfolder, os.ModePerm)
+
+			d1 := []byte("This is a test.")
+			fileName := filepath.Join(pwd, tc.folder, tc.subfolder, "test.txt")
+			_ = os.WriteFile(fileName, d1, 0644)
 
 			processedObjects, err := processor.ProcessFolder(pwd + tc.folder)
 
 			assert.Nil(t, err)
 			assert.Len(t, processedObjects, 1)
 			assert.Equal(t, "test.txt", processedObjects[0].FileName)
-			assert.Equal(t, pwd+tc.folder+tc.location, processedObjects[0].FileLocation)
+			assert.Equal(t, filepath.Join(pwd, tc.folder, tc.subfolder, tc.location), processedObjects[0].FileLocation)
 			assert.Equal(t, "text/plain", processedObjects[0].ContentType)
 			assert.Equal(t, int32(15), processedObjects[0].ContentSize)
 		})
@@ -47,8 +55,11 @@ func TestFolderIngest_ProcessFile_Success(t *testing.T) {
 	processor := &LocalIngestProcessorImpl{}
 
 	pwd, _ := os.Getwd()
+	_ = os.Mkdir("test", os.ModePerm)
 
-	fileName := pwd + "/../../test/files/ingest/test.txt"
+	d1 := []byte("test go")
+	fileName := filepath.Join(pwd, "test", "test.txt")
+	_ = os.WriteFile(fileName, d1, 0644)
 
 	processedObject, err := processor.ProcessFile(fileName)
 

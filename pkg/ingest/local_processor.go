@@ -40,15 +40,19 @@ func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*mode
 				return nil, err
 			} else {
 				processedObjects = append(processedObjects, processedFolderObjects...)
+				os.Remove(folder + "/" + entry.Name())
 			}
 		} else {
 			if processedFile, err := processor.ProcessFile(folder + "/" + entry.Name()); err != nil {
 				return nil, err
 			} else {
 				processedObjects = append(processedObjects, processedFile)
+				os.Remove(folder + "/" + entry.Name())
 			}
 		}
 	}
+
+	os.Remove(folder)
 
 	return processedObjects, nil
 }
