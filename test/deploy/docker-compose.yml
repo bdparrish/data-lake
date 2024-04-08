@@ -69,7 +69,7 @@ services:
       - "POSTGRES_HOST=postgres"
       - "POSTGRES_PORT=5432"
     command: >
-      sh -c "printenv && go test -v -coverprofile=./target/coverage/coverage-int.out.tmp ./pkg/aws ./pkg/db ./models/v1"
+      sh -c "printenv && go test -v -coverprofile=./target/coverage/coverage-int.out.tmp ./pkg/aws ./pkg/db ./models/v1/proto"
 
 volumes:
   data-lake:

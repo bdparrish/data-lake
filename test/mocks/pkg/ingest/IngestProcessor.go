@@ -3,7 +3,8 @@
 package mocks
 
 import (
-	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
+	db "github.com/codingexplorations/data-lake/models/v1/db"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,23 +14,23 @@ type IngestProcessor struct {
 }
 
 // ProcessFile provides a mock function with given fields: fileName
-func (_m *IngestProcessor) ProcessFile(fileName string) (*modelsv1.Object, error) {
+func (_m *IngestProcessor) ProcessFile(fileName string) (*db.Object, error) {
 	ret := _m.Called(fileName)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ProcessFile")
 	}
 
-	var r0 *modelsv1.Object
+	var r0 *db.Object
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (*modelsv1.Object, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) (*db.Object, error)); ok {
 		return rf(fileName)
 	}
-	if rf, ok := ret.Get(0).(func(string) *modelsv1.Object); ok {
+	if rf, ok := ret.Get(0).(func(string) *db.Object); ok {
 		r0 = rf(fileName)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*modelsv1.Object)
+			r0 = ret.Get(0).(*db.Object)
 		}
 	}
 
@@ -43,23 +44,23 @@ func (_m *IngestProcessor) ProcessFile(fileName string) (*modelsv1.Object, error
 }
 
 // ProcessFolder provides a mock function with given fields: folder
-func (_m *IngestProcessor) ProcessFolder(folder string) ([]*modelsv1.Object, error) {
+func (_m *IngestProcessor) ProcessFolder(folder string) ([]*db.Object, error) {
 	ret := _m.Called(folder)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ProcessFolder")
 	}
 
-	var r0 []*modelsv1.Object
+	var r0 []*db.Object
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) ([]*modelsv1.Object, error)); ok {
+	if rf, ok := ret.Get(0).(func(string) ([]*db.Object, error)); ok {
 		return rf(folder)
 	}
-	if rf, ok := ret.Get(0).(func(string) []*modelsv1.Object); ok {
+	if rf, ok := ret.Get(0).(func(string) []*db.Object); ok {
 		r0 = rf(folder)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*modelsv1.Object)
+			r0 = ret.Get(0).([]*db.Object)
 		}
 	}
 

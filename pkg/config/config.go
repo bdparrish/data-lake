@@ -111,7 +111,7 @@ func setDefaultValues(v *viper.Viper) {
 	v.SetDefault("POSTGRES_USER", "postgres")
 	v.SetDefault("POSTGRES_PASSWORD", "postgres")
 	v.SetDefault("POSTGRES_HOST", "localhost")
-	v.SetDefault("POSTGRES_PORT", "CONSOLE")
+	v.SetDefault("POSTGRES_PORT", "5432")
 	v.SetDefault("POSTGRES_SSL_MODE", "disable")
 	v.SetDefault("POSTGRES_MAX_CONN_TIME_MINUTES", 60)
 	v.SetDefault("POSTGRES_MAX_IDLE_CONNECTIONS", 1)

@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/codingexplorations/data-lake/test/utilities"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,19 +33,33 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			processor := &LocalIngestProcessorImpl{}
+			mockDb, gormDb := utilities.NewMockDB()
 
 			pwd, _ := os.Getwd()
+			fileName := filepath.Join(pwd, tc.folder, tc.subfolder, "test.txt")
+
+			objectsRow := sqlmock.NewRows(
+				[]string{"id", "file_name", "file_location", "content_type", "content_size"},
+			).AddRow(
+				uuid.New().String(), "test.txt", fileName, "text/plain", 15,
+			)
+			mockDb.ExpectQuery("^INSERT INTO \"objects\".*").WithArgs().WillReturnRows(objectsRow)
+
+			processor := &LocalIngestProcessorImpl{}
+			processor.db = gormDb
+
 			_ = os.MkdirAll(pwd+tc.folder+"/"+tc.subfolder, os.ModePerm)
 
 			d1 := []byte("This is a test.")
-			fileName := filepath.Join(pwd, tc.folder, tc.subfolder, "test.txt")
 			_ = os.WriteFile(fileName, d1, 0644)
 
 			processedObjects, err := processor.ProcessFolder(pwd + tc.folder)
 
+			os.Remove(pwd + tc.folder + "/" + tc.subfolder)
+
 			assert.Nil(t, err)
 			assert.Len(t, processedObjects, 1)
+			assert.NotEmpty(t, processedObjects[0].Id.String())
 			assert.Equal(t, "test.txt", processedObjects[0].FileName)
 			assert.Equal(t, filepath.Join(pwd, tc.folder, tc.subfolder, tc.location), processedObjects[0].FileLocation)
 			assert.Equal(t, "text/plain", processedObjects[0].ContentType)
@@ -52,18 +69,32 @@ func TestFolderIngest_ProcessFolder_CheckDepth(t *testing.T) {
 }
 
 func TestFolderIngest_ProcessFile_Success(t *testing.T) {
-	processor := &LocalIngestProcessorImpl{}
+	mockDb, gormDb := utilities.NewMockDB()
 
 	pwd, _ := os.Getwd()
+	fileName := filepath.Join(pwd, "test", "test.txt")
+
+	objectsRow := sqlmock.NewRows(
+		[]string{"id", "file_name", "file_location", "content_type", "content_size"},
+	).AddRow(
+		uuid.New().String(), "test.txt", fileName, "text/plain", 15,
+	)
+	mockDb.ExpectQuery("^INSERT INTO \"objects\".*").WithArgs().WillReturnRows(objectsRow)
+
+	processor := &LocalIngestProcessorImpl{}
+	processor.db = gormDb
+
 	_ = os.Mkdir("test", os.ModePerm)
 
 	d1 := []byte("test go")
-	fileName := filepath.Join(pwd, "test", "test.txt")
 	_ = os.WriteFile(fileName, d1, 0644)
 
 	processedObject, err := processor.ProcessFile(fileName)
 
+	os.Remove("test")
+
 	assert.Nil(t, err)
+	assert.NotEmpty(t, processedObject.Id.String())
 	assert.Equal(t, "test.txt", processedObject.FileName)
 	assert.Equal(t, fileName, processedObject.FileLocation)
 	assert.Equal(t, "text/plain", processedObject.ContentType)

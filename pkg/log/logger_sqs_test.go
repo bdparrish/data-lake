@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
-	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
+	"github.com/codingexplorations/data-lake/models/v1/proto"
 	"github.com/codingexplorations/data-lake/pkg/config"
 	mocks "github.com/codingexplorations/data-lake/test/mocks/pkg/log"
 	"github.com/stretchr/testify/mock"
@@ -31,13 +31,13 @@ func TestServiceLog_Error(t *testing.T) {
 		int32(0),
 		map[string]types.MessageAttributeValue{},
 		mock.MatchedBy(func(input string) bool {
-			logResponse := modelsv1.Log{}
+			logResponse := proto.Log{}
 			if err := protojson.Unmarshal([]byte(input), &logResponse); err != nil {
 				t.Error("Error in unmarshalling log message")
 			}
 
 			return logResponse.GetMessage() == "test error" &&
-				modelsv1.Log_ERROR == logResponse.GetLevel() &&
+				proto.Log_ERROR == logResponse.GetLevel() &&
 				logResponse.GetFile() == "log/logger_sqs_test.go"
 		}),
 		aws.String("test-logger-queue"),
@@ -64,13 +64,13 @@ func TestServiceLog_Warn(t *testing.T) {
 		int32(0),
 		map[string]types.MessageAttributeValue{},
 		mock.MatchedBy(func(input string) bool {
-			logResponse := modelsv1.Log{}
+			logResponse := proto.Log{}
 			if err := protojson.Unmarshal([]byte(input), &logResponse); err != nil {
 				t.Error("Error in unmarshalling log message")
 			}
 
 			return logResponse.GetMessage() == "test warn" &&
-				modelsv1.Log_WARNING == logResponse.GetLevel() &&
+				proto.Log_WARNING == logResponse.GetLevel() &&
 				logResponse.GetFile() == "log/logger_sqs_test.go"
 		}),
 		aws.String("test-logger-queue"),
@@ -97,13 +97,13 @@ func TestServiceLog_Info(t *testing.T) {
 		int32(0),
 		map[string]types.MessageAttributeValue{},
 		mock.MatchedBy(func(input string) bool {
-			logResponse := modelsv1.Log{}
+			logResponse := proto.Log{}
 			if err := protojson.Unmarshal([]byte(input), &logResponse); err != nil {
 				t.Error("Error in unmarshalling log message")
 			}
 
 			return logResponse.GetMessage() == "test info" &&
-				modelsv1.Log_INFO == logResponse.GetLevel() &&
+				proto.Log_INFO == logResponse.GetLevel() &&
 				logResponse.GetFile() == "log/logger_sqs_test.go"
 		}),
 		aws.String("test-logger-queue"),
@@ -130,13 +130,13 @@ func TestServiceLog_Debug(t *testing.T) {
 		int32(0),
 		map[string]types.MessageAttributeValue{},
 		mock.MatchedBy(func(input string) bool {
-			logResponse := modelsv1.Log{}
+			logResponse := proto.Log{}
 			if err := protojson.Unmarshal([]byte(input), &logResponse); err != nil {
 				t.Error("Error in unmarshalling log message")
 			}
 
 			return logResponse.GetMessage() == "test debug" &&
-				modelsv1.Log_DEBUG == logResponse.GetLevel() &&
+				proto.Log_DEBUG == logResponse.GetLevel() &&
 				logResponse.GetFile() == "log/logger_sqs_test.go"
 		}),
 		aws.String("test-logger-queue"),
