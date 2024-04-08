@@ -17,6 +17,7 @@ services:
       - "LOCALSTACK_HOST=localhost"
       - "HOSTNAME=localhost"
       - "TEST_INGEST_BUCKET_NAME=test-ingest-bucket"
+      - "TEST_CATALOG_BUCKET_NAME=test-catalog-bucket"
       - "TEST_INGEST_QUEUE_NAME=test-ingest-queue"
     healthcheck:
       test: 'curl -s localhost:4566/_localstack/init | grep -q -F ''"stage": "READY", "name": "setup.sh", "state": "SUCCESSFUL"'''
@@ -52,6 +53,7 @@ services:
     links:
       - "localstack:s3.localhost.localstack.cloud"
       - "localstack:test-ingest-bucket.s3.localhost.localstack.cloud"
+      - "localstack:test-catalog-bucket.s3.localhost.localstack.cloud"
       - "localstack:bad-bucket.s3.localhost.localstack.cloud" # needed for bad bucket tests
     volumes:
       - "./aws:/root/.aws"

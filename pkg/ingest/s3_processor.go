@@ -45,9 +45,9 @@ func NewS3IngestProcessorImpl(conf *config.Config, db *gorm.DB) *S3IngestProcess
 func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*dbModels.Object, error) {
 	processor.logger.Info(fmt.Sprintf("Processing folder: %s", prefix))
 
-	objects, err := processor.s3Client.ListObjects(processor.conf.AwsBucketName, &prefix)
+	objects, err := processor.s3Client.ListObjects(processor.conf.AwsIngestBucketName, &prefix)
 	if err != nil {
-		processor.logger.Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", processor.conf.AwsBucketName))
+		processor.logger.Error(fmt.Sprintf("couldn't list objects in bucket %v.\n", processor.conf.AwsIngestBucketName))
 		return nil, err
 	}
 
@@ -69,9 +69,9 @@ func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*dbModel
 func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*dbModels.Object, error) {
 	processor.logger.Info(fmt.Sprintf("Processing key: %s", key))
 
-	headObject, err := processor.s3Client.HeadObject(processor.conf.AwsBucketName, key)
+	headObject, err := processor.s3Client.HeadObject(processor.conf.AwsIngestBucketName, key)
 	if err != nil {
-		processor.logger.Error(fmt.Sprintf("couldn't get object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+		processor.logger.Error(fmt.Sprintf("couldn't get object %v in bucket %v.\n", key, processor.conf.AwsIngestBucketName))
 		return nil, err
 	}
 
@@ -95,14 +95,20 @@ func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*dbModels.Objec
 		return nil, nil
 	}
 
-	deleteObjectsOutput, err := processor.s3Client.DeleteObjects(processor.conf.AwsBucketName, []string{key})
+	_, err = processor.s3Client.CopyObject(processor.conf.AwsIngestBucketName, processor.conf.AwsCatalogBucketName, key)
 	if err != nil {
-		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+		processor.logger.Error(fmt.Sprintf("couldn't copy object %v from bucket %v to bucket %v.\n", key, processor.conf.AwsIngestBucketName, processor.conf.AwsCatalogBucketName))
+		return nil, err
+	}
+
+	deleteObjectsOutput, err := processor.s3Client.DeleteObjects(processor.conf.AwsIngestBucketName, []string{key})
+	if err != nil {
+		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsIngestBucketName))
 		return nil, err
 	}
 
 	if len(deleteObjectsOutput.Deleted) == 0 {
-		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsIngestBucketName))
 		return nil, nil
 	}
 
