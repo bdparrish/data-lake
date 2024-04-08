@@ -74,6 +74,28 @@ services:
       timeout: 2s
       retries: 10
 
+  postgres:
+    image: postgres:16.0
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: data_lake
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../mounts/db:/docker-entrypoint-initdb.d
+      - data-lake:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - "CMD-SHELL"
+        - "pg_isready -U postgres"
+      interval: 2s
+      timeout: 2s
+      retries: 50
+
+volumes:
+  data-lake:
+
 networks:
   default:
     name: data-lake-network

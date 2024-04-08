@@ -3,12 +3,12 @@ package ingest
 import (
 	"testing"
 
-	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
+	dbModels "github.com/codingexplorations/data-lake/models/v1/db"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFolderIngest_ProcessFile_validate(t *testing.T) {
-	object := &modelsv1.Object{
+	object := &dbModels.Object{
 		FileName:     "test.txt",
 		FileLocation: "/tmp/test/test.txt",
 		ContentType:  "text/plain",
@@ -24,12 +24,12 @@ func TestFolderIngest_ProcessFile_validate(t *testing.T) {
 func TestFolderIngest_ProcessFile_validateTable(t *testing.T) {
 	tests := []struct {
 		name          string
-		object        *modelsv1.Object
+		object        *dbModels.Object
 		expectedError string
 	}{
 		{
 			name: "invalid - FileName empty",
-			object: &modelsv1.Object{
+			object: &dbModels.Object{
 				FileName:     "",
 				FileLocation: "/tmp/test/test.txt",
 				ContentType:  "text/plain",
@@ -39,7 +39,7 @@ func TestFolderIngest_ProcessFile_validateTable(t *testing.T) {
 		},
 		{
 			name: "invalid - FileLocation empty",
-			object: &modelsv1.Object{
+			object: &dbModels.Object{
 				FileName:     "test.txt",
 				FileLocation: "",
 				ContentType:  "text/plain",
@@ -49,7 +49,7 @@ func TestFolderIngest_ProcessFile_validateTable(t *testing.T) {
 		},
 		{
 			name: "invalid - ContentType empty",
-			object: &modelsv1.Object{
+			object: &dbModels.Object{
 				FileName:     "test.txt",
 				FileLocation: "/tmp/test/test.txt",
 				ContentType:  "",
@@ -59,7 +59,7 @@ func TestFolderIngest_ProcessFile_validateTable(t *testing.T) {
 		},
 		{
 			name: "invalid - ContentSize less than 0",
-			object: &modelsv1.Object{
+			object: &dbModels.Object{
 				FileName:     "test.txt",
 				FileLocation: "/tmp/test/test.txt",
 				ContentType:  "text/plain",
@@ -69,7 +69,7 @@ func TestFolderIngest_ProcessFile_validateTable(t *testing.T) {
 		},
 		{
 			name: "invalid - ContentSize greater than 1GB",
-			object: &modelsv1.Object{
+			object: &dbModels.Object{
 				FileName:     "test.txt",
 				FileLocation: "/tmp/test/test.txt",
 				ContentType:  "text/plain",

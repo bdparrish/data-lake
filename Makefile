@@ -32,6 +32,10 @@ test-int: proto mocks ## Run integration tests - this will start LocalStack, awa
 
 test: test-unit test-int ## Run all tests
 
+migrate: ## Run database migrations
+	@echo -e "$(YT)Running database migrations ...$(NC)"
+	@go run main.go migrate
+
 build: ## Builds the docker image
 	@echo -e "$(YT)Building data-lake docker image ...$(NC)"
 	@env GOOS=linux GOARCH=amd64 go build -o ./target/data-lake main.go

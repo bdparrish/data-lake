@@ -5,19 +5,21 @@ import (
 	golog "log"
 	"strings"
 
-	models_v1 "github.com/codingexplorations/data-lake/models/v1"
+	dbModels "github.com/codingexplorations/data-lake/models/v1/db"
 	"github.com/codingexplorations/data-lake/pkg/aws"
 	"github.com/codingexplorations/data-lake/pkg/config"
 	"github.com/codingexplorations/data-lake/pkg/log"
+	"gorm.io/gorm"
 )
 
 type S3IngestProcessorImpl struct {
 	conf     *config.Config
 	logger   log.Logger
 	s3Client aws.S3Client
+	db       *gorm.DB
 }
 
-func NewS3IngestProcessorImpl(conf *config.Config) *S3IngestProcessorImpl {
+func NewS3IngestProcessorImpl(conf *config.Config, db *gorm.DB) *S3IngestProcessorImpl {
 	logger, err := log.GetLogger()
 	if err != nil {
 		golog.Fatalf("couldn't create logger: %v\n", err)
@@ -35,11 +37,12 @@ func NewS3IngestProcessorImpl(conf *config.Config) *S3IngestProcessorImpl {
 		conf:     conf,
 		logger:   logger,
 		s3Client: &s3Client,
+		db:       db,
 	}
 }
 
 // ProcessFolder processes the file
-func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_v1.Object, error) {
+func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*dbModels.Object, error) {
 	processor.logger.Info(fmt.Sprintf("Processing folder: %s", prefix))
 
 	objects, err := processor.s3Client.ListObjects(processor.conf.AwsBucketName, &prefix)
@@ -48,7 +51,7 @@ func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_
 		return nil, err
 	}
 
-	processedObjects := make([]*models_v1.Object, 0)
+	processedObjects := make([]*dbModels.Object, 0)
 
 	for _, object := range objects {
 		if processedFile, err := processor.ProcessFile(*object.Key); err != nil {
@@ -63,7 +66,7 @@ func (processor *S3IngestProcessorImpl) ProcessFolder(prefix string) ([]*models_
 }
 
 // ProcessFile processes the file
-func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Object, error) {
+func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*dbModels.Object, error) {
 	processor.logger.Info(fmt.Sprintf("Processing key: %s", key))
 
 	headObject, err := processor.s3Client.HeadObject(processor.conf.AwsBucketName, key)
@@ -74,7 +77,7 @@ func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Obje
 
 	pathSplit := strings.Split(key, "/")
 
-	object := &models_v1.Object{
+	object := &dbModels.Object{
 		FileName:     pathSplit[len(pathSplit)-1],
 		FileLocation: key,
 		ContentType:  *headObject.ContentType,
@@ -90,17 +93,22 @@ func (processor *S3IngestProcessorImpl) ProcessFile(key string) (*models_v1.Obje
 	if !valid {
 		processor.logger.Error(fmt.Sprintf("object is invalid: %v\n", object))
 		return nil, nil
-	} else {
-		deleteObjectsOutput, err := processor.s3Client.DeleteObjects(processor.conf.AwsBucketName, []string{key})
-		if err != nil {
-			processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
-			return nil, err
-		}
+	}
 
-		if len(deleteObjectsOutput.Deleted) == 0 {
-			processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
-			return nil, nil
-		}
+	deleteObjectsOutput, err := processor.s3Client.DeleteObjects(processor.conf.AwsBucketName, []string{key})
+	if err != nil {
+		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+		return nil, err
+	}
+
+	if len(deleteObjectsOutput.Deleted) == 0 {
+		processor.logger.Error(fmt.Sprintf("couldn't delete object %v in bucket %v.\n", key, processor.conf.AwsBucketName))
+		return nil, nil
+	}
+
+	if err := processor.db.Create(&object).Error; err != nil {
+		processor.logger.Error(fmt.Sprintf("error creating object record - %v", err))
+		return nil, err
 	}
 
 	return object, nil

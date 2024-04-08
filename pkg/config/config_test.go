@@ -31,6 +31,7 @@ func TestConfig_LoadingDefaultValues(t *testing.T) {
 		t.Error("error in loading default configuration")
 	}
 
+	assert.Equal(t, "", config.ConfigFile)
 	assert.Equal(t, "/tmp/data-lake", config.DataFolder)
 	assert.Equal(t, "local", config.IngestProcessorType)
 	assert.Equal(t, "ingest-bucket", config.AwsBucketName)
@@ -38,4 +39,13 @@ func TestConfig_LoadingDefaultValues(t *testing.T) {
 	assert.Equal(t, "logger-queue", config.AwsLoggerQueueName)
 	assert.Equal(t, "CONSOLE", config.LoggerType)
 	assert.Equal(t, "INFO", config.LoggerLevel)
+	assert.Equal(t, "data_lake", config.PostgresDb)
+	assert.Equal(t, "postgres", config.PostgresUser)
+	assert.Equal(t, "postgres", config.PostgresPassword)
+	assert.Equal(t, "localhost", config.PostgresHost)
+	assert.Equal(t, "5432", config.PostgresPort)
+	assert.Equal(t, "disable", config.PostgresSslMode)
+	assert.Equal(t, 60, config.PostgresMaxConnTimeMinutes)
+	assert.Equal(t, 1, config.PostgresMaxIdleConnections)
+	assert.Equal(t, 5, config.PostgresMaxOpenConnections)
 }

@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
+	proto "github.com/codingexplorations/data-lake/models/v1/proto"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,7 +13,7 @@ type SqsLogger struct {
 }
 
 // sendLogMessage provides a mock function with given fields: msg, logLevel
-func (_m *SqsLogger) sendLogMessage(msg string, logLevel modelsv1.Log_LogLevel) {
+func (_m *SqsLogger) sendLogMessage(msg string, logLevel proto.Log_LogLevel) {
 	_m.Called(msg, logLevel)
 }
 

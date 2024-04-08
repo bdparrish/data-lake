@@ -12,14 +12,23 @@ var configLock = &sync.Mutex{}
 var configInstance *Config
 
 type Config struct {
-	ConfigFile          string `mapstructure:"CONFIG_FILE"`
-	DataFolder          string `mapstructure:"DATA_FOLDER"`
-	IngestProcessorType string `mapstructure:"INGEST_PROCESSOR_TYPE"`
-	AwsBucketName       string `mapstructure:"AWS_BUCKET_NAME"`
-	AwsIngestQueueName  string `mapstructure:"AWS_INGEST_QUEUE_NAME"`
-	AwsLoggerQueueName  string `mapstructure:"AWS_LOGGER_QUEUE_NAME"`
-	LoggerType          string `mapstructure:"LOGGER_TYPE"`
-	LoggerLevel         string `mapstructure:"LOGGER_LEVEL"`
+	ConfigFile                 string `mapstructure:"CONFIG_FILE"`
+	DataFolder                 string `mapstructure:"DATA_FOLDER"`
+	IngestProcessorType        string `mapstructure:"INGEST_PROCESSOR_TYPE"`
+	AwsBucketName              string `mapstructure:"AWS_BUCKET_NAME"`
+	AwsIngestQueueName         string `mapstructure:"AWS_INGEST_QUEUE_NAME"`
+	AwsLoggerQueueName         string `mapstructure:"AWS_LOGGER_QUEUE_NAME"`
+	LoggerType                 string `mapstructure:"LOGGER_TYPE"`
+	LoggerLevel                string `mapstructure:"LOGGER_LEVEL"`
+	PostgresDb                 string `mapstructure:"POSTGRES_DB"`
+	PostgresUser               string `mapstructure:"POSTGRES_USER"`
+	PostgresPassword           string `mapstructure:"POSTGRES_PASSWORD"`
+	PostgresHost               string `mapstructure:"POSTGRES_HOST"`
+	PostgresPort               string `mapstructure:"POSTGRES_PORT"`
+	PostgresSslMode            string `mapstructure:"POSTGRES_SSL_MODE"`
+	PostgresMaxConnTimeMinutes int    `mapstructure:"POSTGRES_MAX_CONN_TIME_MINUTES"`
+	PostgresMaxIdleConnections int    `mapstructure:"POSTGRES_MAX_IDLE_CONNECTIONS"`
+	PostgresMaxOpenConnections int    `mapstructure:"POSTGRES_MAX_OPEN_CONNECTIONS"`
 }
 
 func GetConfig() *Config {
@@ -76,8 +85,17 @@ func bindValues(v *viper.Viper) {
 	_ = v.BindEnv("AWS_BUCKET_NAME")
 	_ = v.BindEnv("AWS_INGEST_QUEUE_NAME")
 	_ = v.BindEnv("AWS_LOGGER_QUEUE_NAME")
+	_ = v.BindEnv("LOGGER_TYPE")
 	_ = v.BindEnv("LOGGER_LEVEL")
-	_ = v.BindEnv("LOGGER_LEVEL")
+	_ = v.BindEnv("POSTGRES_DB")
+	_ = v.BindEnv("POSTGRES_USER")
+	_ = v.BindEnv("POSTGRES_PASSWORD")
+	_ = v.BindEnv("POSTGRES_HOST")
+	_ = v.BindEnv("POSTGRES_PORT")
+	_ = v.BindEnv("POSTGRES_SSL_MODE")
+	_ = v.BindEnv("POSTGRES_MAX_CONN_TIME_MINUTES")
+	_ = v.BindEnv("POSTGRES_MAX_IDLE_CONNECTIONS")
+	_ = v.BindEnv("POSTGRES_MAX_OPEN_CONNECTIONS")
 }
 
 func setDefaultValues(v *viper.Viper) {
@@ -89,6 +107,15 @@ func setDefaultValues(v *viper.Viper) {
 	v.SetDefault("AWS_LOGGER_QUEUE_NAME", "logger-queue")
 	v.SetDefault("LOGGER_TYPE", "CONSOLE")
 	v.SetDefault("LOGGER_LEVEL", "INFO")
+	v.SetDefault("POSTGRES_DB", "data_lake")
+	v.SetDefault("POSTGRES_USER", "postgres")
+	v.SetDefault("POSTGRES_PASSWORD", "postgres")
+	v.SetDefault("POSTGRES_HOST", "localhost")
+	v.SetDefault("POSTGRES_PORT", "5432")
+	v.SetDefault("POSTGRES_SSL_MODE", "disable")
+	v.SetDefault("POSTGRES_MAX_CONN_TIME_MINUTES", 60)
+	v.SetDefault("POSTGRES_MAX_IDLE_CONNECTIONS", 1)
+	v.SetDefault("POSTGRES_MAX_OPEN_CONNECTIONS", 5)
 }
 
 func mergeExternalConfig(v *viper.Viper) error {

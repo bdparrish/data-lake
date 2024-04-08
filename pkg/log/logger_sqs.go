@@ -10,13 +10,13 @@ import (
 	awsSdkConfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
-	modelsv1 "github.com/codingexplorations/data-lake/models/v1"
+	"github.com/codingexplorations/data-lake/models/v1/proto"
 	"github.com/codingexplorations/data-lake/pkg/config"
 	"golang.org/x/exp/slices"
 )
 
 type SqsLogger interface {
-	sendLogMessage(msg string, logLevel modelsv1.Log_LogLevel)
+	sendLogMessage(msg string, logLevel proto.Log_LogLevel)
 }
 
 type SqsLog struct {
@@ -50,25 +50,25 @@ func NewSqsLog() (*SqsLog, error) {
 
 func (logger *SqsLog) Error(msg string) {
 	if slices.Contains([]string{"ERROR", "WARN", "INFO", "DEBUG"}, config.GetConfig().LoggerLevel) {
-		logger.sendLogMessage(msg, modelsv1.Log_ERROR)
+		logger.sendLogMessage(msg, proto.Log_ERROR)
 	}
 }
 
 func (logger *SqsLog) Warn(msg string) {
 	if slices.Contains([]string{"WARN", "INFO", "DEBUG"}, config.GetConfig().LoggerLevel) {
-		logger.sendLogMessage(msg, modelsv1.Log_WARNING)
+		logger.sendLogMessage(msg, proto.Log_WARNING)
 	}
 }
 
 func (logger *SqsLog) Info(msg string) {
 	if slices.Contains([]string{"INFO", "DEBUG"}, config.GetConfig().LoggerLevel) {
-		logger.sendLogMessage(msg, modelsv1.Log_INFO)
+		logger.sendLogMessage(msg, proto.Log_INFO)
 	}
 }
 
 func (logger *SqsLog) Debug(msg string) {
 	if slices.Contains([]string{"DEBUG"}, config.GetConfig().LoggerLevel) {
-		logger.sendLogMessage(msg, modelsv1.Log_DEBUG)
+		logger.sendLogMessage(msg, proto.Log_DEBUG)
 	}
 }
 
@@ -118,10 +118,10 @@ func (client LoggerSqs) SendMessage(delay int32, attributes map[string]types.Mes
 	return client.Client.SendMessage(context.Background(), input)
 }
 
-func (logger *SqsLog) sendLogMessage(msg string, logLevel modelsv1.Log_LogLevel) {
+func (logger *SqsLog) sendLogMessage(msg string, logLevel proto.Log_LogLevel) {
 	file, line := getCaller(3)
 
-	l := &modelsv1.Log{
+	l := &proto.Log{
 		Timestamp: time.Now().UnixMilli(),
 		Level:     logLevel,
 		File:      file,
