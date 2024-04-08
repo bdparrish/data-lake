@@ -23,7 +23,7 @@ func TestS3Client_ListObjects(t *testing.T) {
 
 	putObjectOutput, err := uploadLocalObject(
 		s3Client,
-		conf.AwsBucketName,
+		conf.AwsIngestBucketName,
 		objectKey,
 		"/app/test/files/ingest/test.txt",
 		map[string]string{
@@ -38,7 +38,7 @@ func TestS3Client_ListObjects(t *testing.T) {
 		t.Error("failed to upload object")
 	}
 
-	objects, _ := s3Client.ListObjects(conf.AwsBucketName, nil)
+	objects, _ := s3Client.ListObjects(conf.AwsIngestBucketName, nil)
 
 	assert.NotNil(t, objects)
 	assert.Len(t, objects, 1)
@@ -52,11 +52,11 @@ func TestS3Client_HeadObject(t *testing.T) {
 
 	objectKey := "test/something/test.txt"
 
-	logger.Debug(fmt.Sprintf("uploading object to bucket %v with key %v", conf.AwsBucketName, objectKey))
+	logger.Debug(fmt.Sprintf("uploading object to bucket %v with key %v", conf.AwsIngestBucketName, objectKey))
 
 	putObjectOutput, err := uploadLocalObject(
 		s3Client,
-		conf.AwsBucketName,
+		conf.AwsIngestBucketName,
 		objectKey,
 		"/app/test/files/ingest/test.txt",
 		map[string]string{
@@ -71,7 +71,7 @@ func TestS3Client_HeadObject(t *testing.T) {
 		t.Error("failed to upload object")
 	}
 
-	headObject, _ := s3Client.HeadObject(conf.AwsBucketName, objectKey)
+	headObject, _ := s3Client.HeadObject(conf.AwsIngestBucketName, objectKey)
 
 	assert.NotNil(t, headObject.Metadata)
 }
@@ -85,7 +85,7 @@ func TestS3Client_HeadObjectBadBucket(t *testing.T) {
 
 	_, _ = uploadLocalObject(
 		s3Client,
-		conf.AwsBucketName,
+		conf.AwsIngestBucketName,
 		objectKey,
 		"../../test/files/ingest/test.txt",
 		map[string]string{
@@ -102,7 +102,7 @@ func TestS3Client_HeadObjectBadBucket(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestS3Client_DeleteObjects(t *testing.T) {
+func TestS3Client_CopyObject(t *testing.T) {
 	logger := log.NewConsoleLog()
 	s3Client, _ := NewS3()
 
@@ -112,7 +112,7 @@ func TestS3Client_DeleteObjects(t *testing.T) {
 
 	_, err := uploadLocalObject(
 		s3Client,
-		conf.AwsBucketName,
+		conf.AwsIngestBucketName,
 		objectKey,
 		"/app/test/files/ingest/test.txt",
 		map[string]string{
@@ -125,7 +125,41 @@ func TestS3Client_DeleteObjects(t *testing.T) {
 		t.Error("failed to upload object")
 	}
 
-	deleteObjectsOutput, _ := s3Client.DeleteObjects(conf.AwsBucketName, []string{objectKey})
+	copyObjectOutput, _ := s3Client.CopyObject(conf.AwsIngestBucketName, conf.AwsCatalogBucketName, objectKey)
+
+	assert.NotNil(t, copyObjectOutput)
+
+	headObjectOutput, err := s3Client.HeadObject(conf.AwsCatalogBucketName, objectKey)
+
+	assert.NotNil(t, headObjectOutput)
+	assert.Nil(t, err)
+	assert.Equal(t, "text/plain", *headObjectOutput.ContentType)
+}
+
+func TestS3Client_DeleteObjects(t *testing.T) {
+	logger := log.NewConsoleLog()
+	s3Client, _ := NewS3()
+
+	conf := config.GetConfig()
+
+	objectKey := "test/something/test.txt"
+
+	_, err := uploadLocalObject(
+		s3Client,
+		conf.AwsIngestBucketName,
+		objectKey,
+		"/app/test/files/ingest/test.txt",
+		map[string]string{
+			"key1": "value1",
+		},
+	)
+
+	if err != nil {
+		logger.Debug(fmt.Sprintf("failed to upload object: %v", err))
+		t.Error("failed to upload object")
+	}
+
+	deleteObjectsOutput, _ := s3Client.DeleteObjects(conf.AwsIngestBucketName, []string{objectKey})
 
 	assert.NotNil(t, deleteObjectsOutput)
 	assert.Len(t, deleteObjectsOutput.Deleted, 1)

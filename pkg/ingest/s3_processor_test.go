@@ -39,14 +39,17 @@ func Test_S3Processor_ProcessFolder(t *testing.T) {
 			Key: aws.String("test/test2.txt"),
 		},
 	}
-	s3Client.On("ListObjects", conf.AwsBucketName, aws.String("test/")).Return(listObjectsOutput, nil)
+	s3Client.On("ListObjects", conf.AwsIngestBucketName, aws.String("test/")).Return(listObjectsOutput, nil)
 
 	headObjectOutput := &s3.HeadObjectOutput{
 		ContentType:   aws.String("text/plain"),
 		ContentLength: aws.Int64(15),
 	}
-	s3Client.On("HeadObject", conf.AwsBucketName, "test/test1.txt").Return(headObjectOutput, nil)
-	s3Client.On("HeadObject", conf.AwsBucketName, "test/test2.txt").Return(headObjectOutput, nil)
+	s3Client.On("HeadObject", conf.AwsIngestBucketName, "test/test1.txt").Return(headObjectOutput, nil)
+	s3Client.On("HeadObject", conf.AwsIngestBucketName, "test/test2.txt").Return(headObjectOutput, nil)
+
+	s3Client.On("CopyObject", conf.AwsIngestBucketName, conf.AwsCatalogBucketName, "test/test1.txt").Return(nil, nil)
+	s3Client.On("CopyObject", conf.AwsIngestBucketName, conf.AwsCatalogBucketName, "test/test2.txt").Return(nil, nil)
 
 	deleteObjectsOutput1 := &s3.DeleteObjectsOutput{
 		Deleted: []types.DeletedObject{
@@ -55,7 +58,7 @@ func Test_S3Processor_ProcessFolder(t *testing.T) {
 			},
 		},
 	}
-	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test1.txt"}).Return(deleteObjectsOutput1, nil)
+	s3Client.On("DeleteObjects", conf.AwsIngestBucketName, []string{"test/test1.txt"}).Return(deleteObjectsOutput1, nil)
 	deleteObjectsOutput2 := &s3.DeleteObjectsOutput{
 		Deleted: []types.DeletedObject{
 			{
@@ -63,7 +66,7 @@ func Test_S3Processor_ProcessFolder(t *testing.T) {
 			},
 		},
 	}
-	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test2.txt"}).Return(deleteObjectsOutput2, nil)
+	s3Client.On("DeleteObjects", conf.AwsIngestBucketName, []string{"test/test2.txt"}).Return(deleteObjectsOutput2, nil)
 
 	mockDb, gormDb := utilities.NewMockDB()
 	objectsRow1 := sqlmock.NewRows(
@@ -109,7 +112,9 @@ func Test_S3Processor_ProcessFile(t *testing.T) {
 		ContentType:   aws.String("text/plain"),
 		ContentLength: aws.Int64(15),
 	}
-	s3Client.On("HeadObject", conf.AwsBucketName, "test/test.txt").Return(headObjectOutput, nil)
+	s3Client.On("HeadObject", conf.AwsIngestBucketName, "test/test.txt").Return(headObjectOutput, nil)
+
+	s3Client.On("CopyObject", conf.AwsIngestBucketName, conf.AwsCatalogBucketName, "test/test.txt").Return(nil, nil)
 
 	deleteObjectsOutput1 := &s3.DeleteObjectsOutput{
 		Deleted: []types.DeletedObject{
@@ -118,7 +123,7 @@ func Test_S3Processor_ProcessFile(t *testing.T) {
 			},
 		},
 	}
-	s3Client.On("DeleteObjects", conf.AwsBucketName, []string{"test/test.txt"}).Return(deleteObjectsOutput1, nil)
+	s3Client.On("DeleteObjects", conf.AwsIngestBucketName, []string{"test/test.txt"}).Return(deleteObjectsOutput1, nil)
 
 	mockDb, gormDb := utilities.NewMockDB()
 	objectsRow := sqlmock.NewRows(

@@ -14,6 +14,7 @@ import (
 type S3Client interface {
 	ListObjects(bucketName string, prefix *string) ([]types.Object, error)
 	HeadObject(bucketName string, objectKey string) (*s3.HeadObjectOutput, error)
+	CopyObject(srcBucket string, destBucket string, key string) (*s3.CopyObjectOutput, error)
 	DeleteObjects(bucketName string, keys []string) (*s3.DeleteObjectsOutput, error)
 }
 
@@ -77,6 +78,22 @@ func (client *S3) HeadObject(bucket, key string) (*s3.HeadObjectOutput, error) {
 	}
 
 	return result, nil
+}
+
+func (client *S3) CopyObject(srcBucket, destBucket, key string) (*s3.CopyObjectOutput, error) {
+	input := &s3.CopyObjectInput{
+		Bucket:     aws.String(destBucket),
+		CopySource: aws.String(srcBucket + "/" + key),
+		Key:        aws.String(key),
+	}
+
+	result, err := client.Client.CopyObject(context.TODO(), input)
+
+	if err != nil {
+		client.Logger.Error(fmt.Sprintf("could not copy object %v from %v to %v. Error: %v", key, srcBucket, destBucket, err))
+	}
+
+	return result, err
 }
 
 // DeleteObjects deletes a list of objects from a bucket.

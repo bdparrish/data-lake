@@ -16,6 +16,8 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name $TEST_INGEST_QUEUE_N
 # Create buckets
 awslocal s3 mb s3://$TEST_INGEST_BUCKET_NAME
 awslocal s3api put-bucket-cors --bucket $TEST_INGEST_BUCKET_NAME --cors-configuration file:///etc/localstack/init/bucket-cors.json
+awslocal s3 mb s3://$TEST_CATALOG_BUCKET_NAME
+awslocal s3api put-bucket-cors --bucket $TEST_CATALOG_BUCKET_NAME --cors-configuration file:///etc/localstack/init/bucket-cors.json
 
 # Get SQS Event ARN
 INGEST_QUEUE_EVENT_SQS_ARN=$(awslocal sqs get-queue-attributes \
@@ -26,23 +28,25 @@ INGEST_QUEUE_EVENT_SQS_ARN=$(awslocal sqs get-queue-attributes \
 
 # Create event configurations for the buckets
 awslocal s3api put-bucket-notification-configuration --bucket $TEST_INGEST_BUCKET_NAME \
-    --notification-configuration  '{
-                                      "QueueConfigurations": [
-                                         {
-                                           "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
-                                           "Events": ["s3:ObjectCreated:Put"]
-                                         },
-                                         {
-                                            "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
-                                            "Events": ["s3:ObjectCreated:Copy"]
-                                         },
-                                         {
-                                           "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
-                                           "Events": ["s3:ObjectCreated:Post"]
-                                         },
-                                         {
-                                            "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
-                                            "Events": ["s3:ObjectCreated:CompleteMultipartUpload"]
-                                         }
-                                       ]
-                                     }'
+    --notification-configuration  '
+    {
+      "QueueConfigurations": [
+        {
+          "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
+          "Events": ["s3:ObjectCreated:Put"]
+        },
+        {
+          "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
+          "Events": ["s3:ObjectCreated:Copy"]
+        },
+        {
+          "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
+          "Events": ["s3:ObjectCreated:Post"]
+        },
+        {
+          "QueueArn": "'"$INGEST_QUEUE_EVENT_SQS_ARN"'",
+          "Events": ["s3:ObjectCreated:CompleteMultipartUpload"]
+        }
+      ]
+    }
+    '

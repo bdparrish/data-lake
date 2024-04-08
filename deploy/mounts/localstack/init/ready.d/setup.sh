@@ -17,8 +17,9 @@ awslocal sqs create-queue --region $AWS_REGION --queue-name "$AWS_LOGGER_QUEUE_N
 export LOCALSTACK_URL="${AWS_ENDPOINT_URL}"
 
 # Create buckets
-awslocal s3 mb "s3://${AWS_BUCKET_NAME}"
-awslocal s3api put-bucket-cors --bucket "${AWS_BUCKET_NAME}" --cors-configuration file:///etc/localstack/init/bucket-cors.json
+awslocal s3 mb "s3://${AWS_INGEST_BUCKET_NAME}"
+awslocal s3api put-bucket-cors --bucket "${AWS_INGEST_BUCKET_NAME}" --cors-configuration file:///etc/localstack/init/bucket-cors.json
+awslocal s3 mb s3://$TEST_CATALOG_BUCKET_NAME
 
 
 # Get SQS Event ARN
@@ -29,7 +30,7 @@ INGEST_QUEUE_EVENT_SQS_ARN=$(awslocal sqs get-queue-attributes \
   --output text)
 
 # Create event configurations for the buckets
-awslocal s3api put-bucket-notification-configuration --bucket "${AWS_BUCKET_NAME}" \
+awslocal s3api put-bucket-notification-configuration --bucket "${AWS_INGEST_BUCKET_NAME}" \
   --notification-configuration '
   {
     "QueueConfigurations": [
