@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"log"
+
 	"github.com/codingexplorations/data-lake/pkg/config"
 	"github.com/codingexplorations/data-lake/pkg/ingest"
 )
@@ -18,5 +20,8 @@ func NewRunner(conf *config.Config, processor ingest.IngestProcessor) *Runner {
 }
 
 func (r *Runner) Run() {
-	r.Processor.ProcessFolder(r.Config.DataFolder)
+	_, err := r.Processor.ProcessFolder(r.Config.DataFolder)
+	if err != nil {
+		log.Printf("couldn't process folder %v: %v\n", r.Config.DataFolder, err)
+	}
 }

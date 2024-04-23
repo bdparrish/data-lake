@@ -4,7 +4,12 @@ NC:=\033[0m
 
 .DEFAULT_GOAL := all
 
-all: proto mocks test build
+all: test build
+
+tidy: ## Tidy go mod
+	@echo -e "$(YT)Tidying $(C_NAME) ...$(NC)"
+	rm -f go.sum
+	go mod tidy
 
 proto: ## Build protobuf models
 	@echo "$(YT)Building protobuf ...$(NC)"
@@ -14,15 +19,19 @@ mocks: ## Generate mocks
 	@echo "$(YT)Generating mocks ...$(NC)"
 	mockery --all --keeptree --output ./test/mocks/ --outpkg mocks
 
-run: proto ## Run main
+lint: tidy proto mocks ## Run linter locally
+	@echo -e "${YT}Linting $(C_NAME) files (locally) ...${NC}"
+	@golangci-lint run -v --timeout 10m
+
+run: tidy proto mocks ## Run main
 	@echo "$(YT)Running main.go ...$(NC)"
-	CONFIG_FILE=./.env go run main.go
+	@CONFIG_FILE=./.env go run main.go
 
-test-unit: proto mocks ## Run tests
+test-unit: lint ## Run tests
 	@echo "$(YT)Running tests ...$(NC)"
-	CONFIG_FILE=$(cwd)/test/configs/test.yaml go test -v -cover ./pkg/log/... ./pkg/config/... ./pkg/ingest/... ./pkg/.
+	@CONFIG_FILE=$(cwd)/test/configs/test.yaml go test -v -cover ./pkg/log/... ./pkg/config/... ./pkg/ingest/... ./pkg/.
 
-test-int: proto mocks ## Run integration tests - this will start LocalStack, await healthy LocalStack container, run tests, and clean up docker containers.
+test-int: lint ## Run integration tests - this will start LocalStack, await healthy LocalStack container, run tests, and clean up docker containers.
 	$(eval STACK_NAME:=test-int)
 	@echo "$(YT)Starting compose stack '${STACK_NAME}' for integration tests ...$(NC)"
 	@docker compose -p ${STACK_NAME} -f ./test/deploy/docker-compose.yml down --remove-orphans -v
@@ -36,7 +45,12 @@ migrate: ## Run database migrations
 	@echo -e "$(YT)Running database migrations ...$(NC)"
 	@go run main.go migrate
 
-build: ## Builds the docker image
+scan: lint ## Run security scans
+	@echo "$(YT)Running security scans...$(NC)"
+	@gosec ./...
+	@go list -json -deps ./... | nancy --skip-update-check -q sleuth
+
+build: scan ## Builds the docker image
 	@echo -e "$(YT)Building data-lake docker image ...$(NC)"
 	@env GOOS=linux GOARCH=amd64 go build -o ./target/data-lake main.go
 	@docker build --platform linux/amd64 -t data-lake:latest -f deploy/Dockerfile .
