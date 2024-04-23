@@ -4,6 +4,7 @@ import (
 	"fmt"
 	golog "log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	dbModels "github.com/codingexplorations/data-lake/models/v1/db"
@@ -57,7 +58,7 @@ func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*dbMo
 		}
 	}
 
-	os.Remove(folder)
+	_ = os.Remove(folder)
 
 	return processedObjects, nil
 }
@@ -65,7 +66,7 @@ func (processor *LocalIngestProcessorImpl) ProcessFolder(folder string) ([]*dbMo
 // ProcessFile processes the file
 func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*dbModels.Object, error) {
 	// read the file
-	data, err := os.ReadFile(fileName)
+	data, err := os.ReadFile(filepath.Clean(fileName))
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +93,7 @@ func (processor *LocalIngestProcessorImpl) ProcessFile(fileName string) (*dbMode
 		return nil, nil
 	}
 
-	os.Remove(fileName)
+	_ = os.Remove(fileName)
 
 	if err := processor.db.Create(&object).Error; err != nil {
 		processor.logger.Error(fmt.Sprintf("error creating object record - %v", err))
