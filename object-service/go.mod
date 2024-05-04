@@ -10,7 +10,7 @@ require (
 	github.com/samber/lo v1.39.0
 	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/files v1.0.1
-	github.com/swaggo/swag v1.8.12
+	github.com/swaggo/swag v1.16.3
 	gorm.io/gorm v1.25.9
 )
 

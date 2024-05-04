@@ -1,13 +1,10 @@
 package main
 
 import (
-	"fmt"
-	golog "log"
 	"os"
 	"time"
 
 	"github.com/codingexplorations/data-lake/common/pkg/config"
-	"github.com/codingexplorations/data-lake/common/pkg/db"
 	"github.com/codingexplorations/data-lake/common/pkg/log"
 	"github.com/codingexplorations/data-lake/ingest-service/pkg"
 	"github.com/codingexplorations/data-lake/ingest-service/pkg/ingest"
@@ -15,47 +12,21 @@ import (
 
 // main function that processes a local file
 func main() {
-	if len(os.Args) > 1 && os.Args[1] == "migrate" {
-		migrate()
-	} else {
-		logger := log.NewConsoleLog()
+	logger := log.NewConsoleLog()
 
-		for _, e := range os.Environ() {
-			logger.Info(e)
-		}
-
-		conf := config.GetConfig()
-		processor := ingest.GetIngestProcessor(conf)
-
-		r := pkg.NewRunner(conf, processor)
-
-		r.Config.Print()
-
-		for {
-			r.Run()
-			time.Sleep(10 * time.Second)
-		}
-	}
-}
-
-func migrate() {
-	config := config.GetConfig()
-	logger, err := log.GetLogger()
-	if err != nil {
-		golog.Println("failed to get logger")
-		golog.Printf("error: %v", err)
-		os.Exit(1)
+	for _, e := range os.Environ() {
+		logger.Info(e)
 	}
 
-	logger.Info("Starting DB migration ...")
-	dbMigrator, err := db.NewMigrator(logger, config)
-	if err != nil {
-		logger.Error(fmt.Sprintf("error in initializing DB migrator: %v", err))
-		os.Exit(2)
-	}
-	err = dbMigrator.Migrate()
-	if err != nil {
-		logger.Error(fmt.Sprintf("error in migrating DB: %v", err))
-		os.Exit(3)
+	conf := config.GetConfig()
+	processor := ingest.GetIngestProcessor(conf)
+
+	r := pkg.NewRunner(conf, processor)
+
+	r.Config.Print()
+
+	for {
+		r.Run()
+		time.Sleep(10 * time.Second)
 	}
 }

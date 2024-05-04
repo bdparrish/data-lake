@@ -60,6 +60,8 @@ func TestConsoleLog_Info(t *testing.T) {
 }
 
 func TestConsoleLog_Debug(t *testing.T) {
+	os.Setenv("LOGGER_LEVEL", "DEBUG")
+
 	var buf bytes.Buffer
 
 	log.SetOutput(&buf)
@@ -74,4 +76,6 @@ func TestConsoleLog_Debug(t *testing.T) {
 	if !strings.Contains(buf.String(), "testing DEBUG") {
 		t.Error("Failed to output DEBUG log.")
 	}
+
+	os.Setenv("LOGGER_LEVEL", "INFO")
 }

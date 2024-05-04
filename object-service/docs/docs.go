@@ -70,6 +70,9 @@ const docTemplate = `{
                 },
                 "file_name": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "string"
                 }
             }
         }

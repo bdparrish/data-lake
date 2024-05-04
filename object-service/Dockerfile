@@ -9,7 +9,7 @@ RUN addgroup -g 1000 arrakis && \
     chown arrakis:arrakis -R /app
 
 USER arrakis
-COPY --chown=arrakis:arrakis ./target/objects-service .
+COPY --chown=arrakis:arrakis ./target/object-service .
 COPY --chown=arrakis:arrakis docs .
 
-ENTRYPOINT [ "/app/objects-service" ]
+ENTRYPOINT [ "/app/object-service" ]

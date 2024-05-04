@@ -3,7 +3,7 @@ module github.com/codingexplorations/data-lake/common
 go 1.22.1
 
 require (
-	github.com/bufbuild/protovalidate-go v0.6.0
+	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.32.0-20240221180331-f05a6f4403ce.1
 	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/aws/aws-sdk-go-v2 v1.26.1
 	github.com/aws/aws-sdk-go-v2/config v1.27.11

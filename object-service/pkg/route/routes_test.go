@@ -30,7 +30,7 @@ func TestRoutes(t *testing.T) {
 	)
 
 	assert.NotNil(t, routeMap, "failed to set routes for api")
-	assert.Len(t, routeMap, 14)
+	assert.Len(t, routeMap, 2)
 
 	assert.Contains(t, routeMap, "GET /api/object/")
 	assert.Equal(t, getHandlerFuncName(controller.GetObjects), getHandlerFuncName(routeMap["GET /api/object/"]))

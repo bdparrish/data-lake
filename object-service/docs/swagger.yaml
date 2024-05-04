@@ -11,6 +11,8 @@ definitions:
         type: string
       file_name:
         type: string
+      id:
+        type: string
     type: object
 info:
   contact: {}

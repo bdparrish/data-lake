@@ -33,11 +33,6 @@ lint: tidy docs mocks ## Run linter locally
 	@echo -e "${YT}Linting $(C_NAME) files (locally) ...${NC}"
 	golangci-lint run -v --timeout 10m
 
-build: lint ## Builds a docker image using a locally built binary
-	@echo -e "$(YT)Building $(C_NAME) docker image (using local binary) ...$(NC)"
-	env GOOS=linux GOARCH=amd64 go build -o ./target/$(C_NAME) -ldflags=$(LD_FLAGS) main.go
-	@docker build --platform linux/amd64 -t $(NAME):$(VERSION) -t $(NAME):latest -f Dockerfile .
-
 test: test-unit ## Run all tests locally
 
 test-unit: lint ## Run unit tests locally
@@ -46,7 +41,13 @@ test-unit: lint ## Run unit tests locally
 	ARRAKIS_CONFIGURATION=$(cwd)/test/configs/test.yaml go test -ldflags=$(LD_FLAGS) -v -count=1 -coverprofile=./target/coverage/coverage.out ./...
 	go tool cover -html=./target/coverage/coverage.out -o ./target/coverage/coverage.html
 
-scan: lint ## Run security scans
+scan: test ## Run security scans
 	@echo "$(YT)Running security scans...$(NC)"
 	@gosec ./...
 	@go list -json -deps ./... | nancy --skip-update-check -q sleuth
+
+build: scan ## Builds the docker image
+	@echo -e "$(YT)Building object-service docker image ...$(NC)"
+	@env GOOS=linux GOARCH=amd64 go build -o ./target/object-service main.go
+	@docker build --platform linux/amd64 -t object-service:latest -f Dockerfile .
+	@docker scout quickview data-lake:latest
