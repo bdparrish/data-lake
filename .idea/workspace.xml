@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f6180489-d89f-4b5f-8875-9986e2035f77" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buf.gen.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buf.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/buf.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sample-2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/sample.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/data/sample-2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/data/sample.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/db/00_bash.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/db/01_schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/dnsmasq/dns.conf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/localstack/init/bucket-cors.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/mounts/localstack/init/ready.d/setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/v1/db/schema.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/v1/proto/schema.pb.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/v1/proto/schema.proto" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/aws/s3.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/aws/s3_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/aws/sqs.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/aws/sqs_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/converter/model_converter.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/db/dbmigrator.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/db/dbmigrator_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/db/postgres.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/db/postgres_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/ingest_processor.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/ingest_processor_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/local_processor.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/local_processor_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/s3_processor.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/ingest/s3_processor_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger_console.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger_console_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger_sqs.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger_sqs_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/log/logger_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/runner.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/runner_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/coverage/coverage-int.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/coverage/coverage-int.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/coverage/coverage-int.out.tmp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/configs/test.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/aws/config" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/aws/credentials" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/db/00_bash.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/db/01_schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/localstack/init/bucket-cors.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/deploy/localstack/init/ready.d/setup.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/files/ingest/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/aws/S3Client.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/aws/SqsClient.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/converter/GenericConverter.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/ingest/IngestProcessor.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/log/Logger.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/log/LoggerSqsClient.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/mocks/pkg/log/SqsLogger.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/utilities/test_db.go" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file:///opt/homebrew/opt/go/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2fXupmgKE8nB24InGPVjKYSDMKI" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "16-add-object-api",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/benjaminparrish",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-2946fb9b3188-155fe4b6e3a0-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.14475.38" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/ingest-service" />
+    </ignored-roots>
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/data_lake$s3_processor_test_go.out" NAME="s3_processor_test.go Coverage Results" MODIFIED="1712407143546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/data_lake$local_processor_test_go.out" NAME="local_processor_test.go Coverage Results" MODIFIED="1711203689433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/data_lake$TestFolderIngest_ProcessFolder_Failure_in_github_com_codeexplorations_data_lake_pkg_ingest.out" NAME="TestFolderIngest_ProcessFolder_Failure in github.com/codeexplorations/data-lake/pkg/ingest Coverage Results" MODIFIED="1711203667899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

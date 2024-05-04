@@ -1,0 +1,50 @@
+basePath: /api/object/
+definitions:
+  proto.Object:
+    properties:
+      content_size:
+        description: int32 4,294,967,295 or int64 9,223,372,036,854,775,807
+        type: integer
+      content_type:
+        type: string
+      file_location:
+        type: string
+      file_name:
+        type: string
+      id:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Object service for core object operations.
+  termsOfService: http://swagger.io/terms/
+  title: Object Service
+  version: 0.0.1
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Queries the API for objects and details.
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        type: integer
+      - description: Page Size
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/proto.Object'
+      summary: Get objects in the system. Utilize page and size to paginate through
+        the list of objects. Page and size are optional as the defaults for the system
+        will be used.
+      tags:
+      - object
+swagger: "2.0"

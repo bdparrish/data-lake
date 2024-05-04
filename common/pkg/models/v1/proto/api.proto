@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package models.v1.proto;
+
+import "buf/validate/validate.proto";
+import "pkg/models/v1/proto/schema.proto";
+
+option go_package = "./models/v1/proto";
+
+message ObjectGetAllResponse {
+    repeated Object objects = 1;
+}
